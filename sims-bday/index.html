@@ -19,7 +19,7 @@
 
 <!-- 1. Загрузочный экран -->
 <div class="loader" id="loader" aria-hidden="true">
-  <img class="loader__gem" src="assets/plumbob.webp" alt="">
+  <div class="loader__gem-wrap"><img class="loader__gem" src="assets/plumbob.webp" alt=""></div>
   <p class="loader__text" id="loaderText">Надуваем шарики…</p>
 </div>
 
@@ -103,20 +103,20 @@
       <p class="countdown" id="countdown">До вечеринки: —</p>
 
       <ul class="goal-list">
-        <li class="goal goal--main" id="goalMain">
+        <li class="goal goal--main">
           <img src="assets/i-cake.webp" alt="" class="goal__icon">
           <span class="goal__name"><b>Основная цель:</b><br>Задуть свечи</span>
-          <span class="goal__count"><span class="goal__check" aria-hidden="true">✓</span><span data-count>0</span>/1</span>
+          <span class="goal__count">0/1</span>
         </li>
-        <li class="goal goal--tap" id="goalJokes" role="button" tabindex="0" aria-label="Рассказать анекдот">
+        <li class="goal">
           <img src="assets/i-dog.webp" alt="" class="goal__icon">
           <span class="goal__name">Рассказывать анекдоты</span>
-          <span class="goal__count"><span class="goal__check" aria-hidden="true">✓</span><span data-count>0</span>/2</span>
+          <span class="goal__count">0/2</span>
         </li>
-        <li class="goal goal--tap" id="goalEat" role="button" tabindex="0" aria-label="Перекусить">
+        <li class="goal">
           <img src="assets/i-food.webp" alt="" class="goal__icon goal__icon--food">
           <span class="goal__name">Есть</span>
-          <span class="goal__count"><span class="goal__check" aria-hidden="true">✓</span><span data-count>0</span>/4</span>
+          <span class="goal__count">0/4</span>
         </li>
       </ul>
     </div>
@@ -162,6 +162,7 @@
 <div class="confetti" id="confetti" aria-hidden="true"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="main.js"></script>
 </body>
 </html>

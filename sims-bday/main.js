@@ -3,12 +3,12 @@
    ========================================================= */
 const PARTY = {
   // Дата и время начала (часовой пояс +03:00 — Москва)
-  start: "2026-10-24T19:00:00+03:00",
+  start: "2026-11-28T17:00:00+03:00",
   // Сколько часов длится (для файла календаря)
   durationHours: 5,
   // С какого момента «монетка» начинает ползти по прогресс-бару
   inviteSent: "2026-10-05T00:00:00+03:00",
-  place: "Адрес пришлю лично",
+  place: "Адрес пришлю позже",
   // Ссылка на карту (Яндекс/Google). Пусто — адрес без ссылки
   mapUrl: "",
 };
@@ -42,12 +42,6 @@ const MILESTONES = [
 const LOADER_PHRASES = [
   "Надуваем шарики…", "Ретикулируем сплайны…", "Прячем возраст…",
   "Зажигаем 30 свечей…", "Ищем лестницу из бассейна…", "Уговариваем собачку…",
-];
-
-const JOKES = [
-  "Почему симы не стареют? Потому что кто-то отключил старение в настройках. Вот бы и мне так!",
-  "Сим заходит в бассейн… а лестницу уже убрали. Классика.",
-  "— Сав-сав, нуб-нуб! — Это я сказала «с днём рождения» на симлише.",
 ];
 
 /* ========================================================= */
@@ -167,48 +161,6 @@ function showToast(icon, title, text, ms = 4200) {
   }, ms);
 }
 
-/* ---------- Цели ---------- */
-function makeGoal(el, max) {
-  const countEl = el.querySelector("[data-count]");
-  let n = 0;
-  return {
-    get value() { return n; },
-    inc() {
-      if (n >= max) return false;
-      n++; countEl.textContent = n;
-      if (n === max) el.classList.add("is-done");
-      if (hasGSAP && !reduceMotion) gsap.fromTo(el.querySelector(".goal__count"), { scale: 1.5 }, { scale: 1, duration: .5, ease: "elastic.out(1, .4)" });
-      return true;
-    },
-  };
-}
-const goalMain = makeGoal($("#goalMain"), 1);
-const goalJokes = makeGoal($("#goalJokes"), 2);
-const goalEat = makeGoal($("#goalEat"), 4);
-
-let jokeIdx = 0;
-function tellJoke() {
-  const joke = JOKES[jokeIdx++ % JOKES.length];
-  goalJokes.inc();
-  Sound.play(goalJokes.value === 2 && jokeIdx === 2 ? "goal" : "pop");
-  showToast("assets/i-dog.webp", goalJokes.value >= 2 ? "Цель выполнена: анекдоты!" : "Собачка рассказывает анекдот", joke, 6000);
-}
-const EAT_LINES = ["Ням! Стейк одобрен.", "Фасоль — тоже еда.", "Картошечка — это любовь.", "Сим сыт и доволен. На вечеринке будет добавка!"];
-function eat() {
-  if (goalEat.inc()) {
-    Sound.play(goalEat.value === 4 ? "goal" : "pop");
-    showToast("assets/i-food.webp", goalEat.value === 4 ? "Цель выполнена: поесть!" : "Голод +25", EAT_LINES[goalEat.value - 1]);
-  } else showToast("assets/i-food.webp", "Шкала «Голод» полная", "Остальное — на вечеринке 🍰");
-}
-[["#goalJokes", tellJoke], ["#goalEat", eat]].forEach(([sel, fn]) => {
-  const el = $(sel);
-  el.addEventListener("click", fn);
-  el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fn(); } });
-});
-$("#goalMain").addEventListener("click", () => {
-  if (goalMain.value === 0) showToast("assets/i-cake.webp", "Основная цель", "Свечи задуваем вместе — сначала присоединись к событию!");
-});
-
 /* ---------- Обратный отсчёт + монетка ---------- */
 const plural = (n, f) => f[(n % 10 === 1 && n % 100 !== 11) ? 0 : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)) ? 1 : 2];
 function tick() {
@@ -286,7 +238,7 @@ const modal = $("#modal");
 let joined = false;
 function openModal() {
   const f = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Moscow" });
-  $("#modalText").textContent = `Основная цель засчитана. Жду тебя ${f.format(startDate)}. ${PARTY.place}.`;
+  $("#modalText").textContent = `Жду тебя ${f.format(startDate)}. ${PARTY.place}.`;
   modal.hidden = false;
   if (hasGSAP && !reduceMotion) gsap.fromTo(".modal__box", { scale: .85, opacity: 0 }, { scale: 1, opacity: 1, duration: .45, ease: "back.out(1.8)" });
   $("#icsBtn").focus({ preventScroll: true });
@@ -300,7 +252,6 @@ $("#cta").addEventListener("click", () => {
   Sound.play("fanfare");
   if (!joined) {
     joined = true;
-    goalMain.inc();
     $("#cta").classList.add("is-joined");
     $("#ctaLabel").innerHTML = "Ты в событии!<br>Добавить в календарь";
     setTimeout(openModal, reduceMotion ? 0 : 900);
@@ -371,6 +322,92 @@ function initParallax() {
   } else if (DOE) addEventListener("deviceorientation", onTilt);
 }
 
+/* ---------- 3D-пламбоб (three.js) ---------- */
+const Gems = (() => {
+  const items = [];
+  let raf = 0;
+  function geometry(THREE, scale = 1) {
+    // Вытянутая шестигранная бипирамида, как в The Sims 4
+    const n = 6, r = 1.08 * scale, top = 2.32 * scale, bottom = -2.32 * scale;
+    const eq = Array.from({ length: n }, (_, i) => [Math.cos(i * 2 * Math.PI / n) * r, 0, Math.sin(i * 2 * Math.PI / n) * r]);
+    const cTop = [0.1, 0.52, 0.06], cMid = [0.42, 0.88, 0.12], cBot = [0.0, 0.2, 0.02];
+    const pos = [], col = [];
+    for (let i = 0; i < n; i++) {
+      const a = eq[i], b = eq[(i + 1) % n];
+      pos.push(0, top, 0, ...b, ...a); col.push(...cTop, ...cMid, ...cMid);
+      pos.push(0, bottom, 0, ...a, ...b); col.push(...cBot, ...cMid, ...cMid);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute("color", new THREE.Float32BufferAttribute(col, 3));
+    g.computeVertexNormals(); // неиндексированная геометрия → плоские грани
+    return g;
+  }
+  function mount(host, { speed = 1, tilt = true } = {}) {
+    const THREE = window.THREE;
+    if (!THREE || !host) return;
+    let renderer;
+    try { renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "low-power" }); }
+    catch (e) { return; }
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(30, 240 / 507, 0.1, 50);
+    camera.position.set(0, 0, 9.4);
+    const geo = geometry(THREE);
+    const gem = new THREE.Group();
+    // Светящееся ядро внутри — даёт «стеклянную» глубину
+    gem.add(new THREE.Mesh(geometry(THREE, 0.62), new THREE.MeshBasicMaterial({
+      color: 0xb4ff3c, transparent: true, opacity: 0.32, blending: THREE.AdditiveBlending, depthWrite: false,
+    })));
+    // Стеклянная оболочка
+    gem.add(new THREE.Mesh(geo, new THREE.MeshPhongMaterial({
+      vertexColors: true, flatShading: true, shininess: 160, specular: 0xffffff,
+      emissive: 0x021f03, transparent: true, opacity: 0.95, depthWrite: false,
+    })));
+    gem.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color: 0xc8ffb0, transparent: true, opacity: 0.3 })));
+    scene.add(gem);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.22));
+    const key = new THREE.DirectionalLight(0xffffff, 1.15); key.position.set(-3, 4, 6); scene.add(key);
+    const fill = new THREE.DirectionalLight(0x9dff80, 0.35); fill.position.set(4, -1, 3); scene.add(fill);
+    const rim = new THREE.DirectionalLight(0xffffff, 0.6); rim.position.set(0, 2, -6); scene.add(rim);
+    const canvas = renderer.domElement;
+    canvas.className = "gem3d";
+    host.appendChild(canvas);
+    host.classList.add("has-3d");
+    const fit = () => {
+      const w = host.clientWidth, h = host.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h; camera.updateProjectionMatrix();
+    };
+    fit();
+    if ("ResizeObserver" in window) new ResizeObserver(fit).observe(host);
+    const item = { host, renderer, scene, camera, gem, speed, tilt };
+    items.push(item);
+    if (reduceMotion) { gem.rotation.y = 0.6; renderer.render(scene, camera); }
+    else if (!raf) raf = requestAnimationFrame(loop);
+    return item;
+  }
+  function loop(t) {
+    const s = t / 1000;
+    items.forEach((it) => {
+      it.gem.rotation.y = s * 1.1 * it.speed;
+      if (it.tilt) { it.gem.rotation.x = Math.sin(s * 0.9) * 0.22; it.gem.rotation.z = Math.sin(s * 0.7) * 0.06; }
+      it.renderer.render(it.scene, it.camera);
+    });
+    raf = items.length ? requestAnimationFrame(loop) : 0;
+  }
+  function unmount(host) {
+    const i = items.findIndex((it) => it.host === host);
+    if (i < 0) return;
+    items[i].renderer.dispose();
+    items.splice(i, 1);
+  }
+  return { mount, unmount };
+})();
+Gems.mount($(".loader__gem-wrap"), { speed: 2.4, tilt: false });
+Gems.mount($(".logo__gem-wrap"));
+
 /* ---------- Загрузка и вход ---------- */
 const loader = $("#loader"), loaderText = $("#loaderText");
 let phrase = 0;
@@ -400,11 +437,11 @@ function start() {
 
   const mobile = matchMedia("(max-width: 900px)").matches;
   const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-  tl.to(loader, { opacity: 0, duration: .35, onComplete: () => loader.remove() })
+  tl.to(loader, { opacity: 0, duration: .35, onComplete: () => { Gems.unmount($(".loader__gem-wrap")); loader.remove(); } })
     .from(".sim", { opacity: 0, y: 40, duration: .7 }, "-=.15")
     .from(".logo__word--l", { x: -40, opacity: 0, duration: .5, ease: "back.out(2)" }, "<.1")
     .from(".logo__word--r", { x: 40, opacity: 0, duration: .5, ease: "back.out(2)" }, "<")
-    .from(".logo__gem", { y: -60, scale: .3, opacity: 0, duration: .6, ease: "back.out(2.4)" }, "<.1")
+    .from(".logo__gem-wrap", { y: -60, scale: .3, opacity: 0, duration: .6, ease: "back.out(2.4)" }, "<.1")
     .from(".panel-l", mobile ? { y: 40, opacity: 0, duration: .6, clearProps: "transform" } : { x: -120, opacity: 0, duration: .7, ease: "back.out(1.4)", clearProps: "transform" }, "<")
     .from(".event", mobile ? { y: 50, opacity: 0, duration: .6, clearProps: "transform" } : { x: 120, opacity: 0, duration: .7, ease: "back.out(1.4)", clearProps: "transform" }, "<.05")
     .from(".badge", { scale: 0, opacity: 0, duration: .45, stagger: .06, ease: "back.out(2.5)" }, "-=.35")
@@ -416,8 +453,7 @@ function start() {
 }
 
 function ambient() {
-  // Кристалл: вращение по Y + покачивание
-  gsap.to(".logo__gem", { rotationY: 360, duration: 6, ease: "none", repeat: -1 });
+  // Кристалл: покачивание (вращение — в 3D-рендере ниже)
   gsap.to(".logo__gem-wrap", { y: -6, rotation: 4, duration: 1.8, ease: "sine.inOut", yoyo: true, repeat: -1 });
   // Персонаж дышит и чуть покачивается
   gsap.to("#simImg", { scale: 1.006, duration: 2.4, ease: "sine.inOut", yoyo: true, repeat: -1 });

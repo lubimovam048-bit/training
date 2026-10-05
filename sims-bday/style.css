@@ -49,7 +49,8 @@ button { font: inherit; color: inherit; }
   display: grid; place-content: center; justify-items: center; gap: 22px;
   background: radial-gradient(circle at 50% 45%, var(--bg-in), var(--bg-mid) 45%, var(--bg-out) 80%);
 }
-.loader__gem { width: 54px; animation: spinY 1.4s linear infinite; filter: drop-shadow(0 8px 14px rgba(0, 80, 0, .3)); }
+.loader__gem-wrap { position: relative; width: 54px; }
+.loader__gem { width: 100%; animation: spinY 1.4s linear infinite; filter: drop-shadow(0 8px 14px rgba(0, 80, 0, .3)); }
 .loader__text { margin: 0; color: #fff; font-weight: 800; font-size: 18px; text-shadow: 0 2px 6px rgba(20, 60, 120, .35); min-height: 1.4em; }
 @keyframes spinY { to { transform: rotateY(360deg); } }
 
@@ -101,8 +102,11 @@ button { font: inherit; color: inherit; }
 .logo__word { height: auto; filter: drop-shadow(0 4px 6px rgba(10, 40, 110, .25)); }
 .logo__word--l { width: 45%; }
 .logo__word--r { width: 40.5%; margin-top: 1%; }
-.logo__gem-wrap { width: 11%; margin: 0 1% 0 0; perspective: 400px; display: grid; place-items: center; }
-.logo__gem { width: 100%; height: auto; transform-style: preserve-3d; filter: drop-shadow(0 6px 10px rgba(0, 90, 0, .35)); }
+.logo__gem-wrap { position: relative; width: 11%; margin: 0 1% 0 0; display: grid; place-items: center; }
+.logo__gem { width: 100%; height: auto; filter: drop-shadow(0 6px 10px rgba(0, 90, 0, .35)); }
+/* 3D-кристалл поверх PNG-заглушки (PNG остаётся, если WebGL недоступен) */
+.gem3d { position: absolute; inset: 0; width: 100%; height: 100%; filter: drop-shadow(0 6px 10px rgba(0, 90, 0, .35)); }
+.has-3d > img { visibility: hidden; animation: none; }
 
 /* Sim */
 .sim {
@@ -112,7 +116,7 @@ button { font: inherit; color: inherit; }
   aspect-ratio: 1000 / 1615;
   translate: -50% 0;
 }
-.sim__img { width: 100%; height: 100%; object-fit: contain; transform-origin: 50% 95%; cursor: pointer; filter: drop-shadow(0 10px 30px rgba(20, 50, 100, .18)); }
+.sim__img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: contain; transform-origin: 50% 95%; cursor: pointer; filter: drop-shadow(0 10px 30px rgba(20, 50, 100, .18)); }
 .sim__sparks { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
 .spark {
   position: absolute; width: 14px; height: 14px; border-radius: 50%;
@@ -120,7 +124,7 @@ button { font: inherit; color: inherit; }
 }
 
 /* Thought clouds */
-.thought { position: absolute; z-index: 2; width: 21%; pointer-events: none; }
+.thought { position: absolute; z-index: 0; width: 21%; pointer-events: none; }
 .thought--l { left: 12%; top: -1.5%; }
 .thought--r { left: 66%; top: 2.5%; width: 23%; }
 .thought__cloud {
@@ -224,12 +228,6 @@ button { font: inherit; color: inherit; }
 .goal__name { align-self: center; padding: 8px 6px; color: var(--blue-2); font-weight: 700; font-size: 15px; line-height: 1.25; }
 .goal__name b { font-weight: 800; }
 .goal__count { display: flex; align-items: center; justify-content: center; gap: 3px; background: var(--row-count); color: var(--green); font-weight: 800; font-size: 18px; font-variant-numeric: tabular-nums; }
-.goal__check { display: none; color: #fff; background: #3fb33a; width: 18px; height: 18px; border-radius: 50%; font-size: 12px; place-items: center; }
-.goal.is-done .goal__check { display: grid; }
-.goal.is-done { background: #f1fbe9; }
-.goal--tap { cursor: pointer; transition: scale .15s ease; }
-.goal--tap:active { scale: .98; }
-.goal--tap:focus-visible { outline: 3px solid var(--blue-2); outline-offset: 2px; }
 
 .cta-wrap { margin-top: 18px; }
 .cta {

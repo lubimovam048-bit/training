@@ -406,7 +406,20 @@ const Gems = (() => {
   return { mount, unmount };
 })();
 Gems.mount($(".loader__gem-wrap"), { speed: 2.4, tilt: false });
-Gems.mount($(".logo__gem-wrap"));
+Gems.mount($(".logo__gem-wrap"), { tilt: false });
+
+/* ---------- Пламбоб строго над головой сима ---------- */
+const HEAD_X = 0.47; // центр головы на картинке персонажа (доля ширины)
+function alignGem() {
+  const logo = $(".logo"), wrap = $(".logo__gem-wrap"), img = $("#simImg");
+  logo.style.setProperty("--gem-dx", "0px");
+  const g = wrap.getBoundingClientRect(), s = img.getBoundingClientRect();
+  const dx = s.left + s.width * HEAD_X - (g.left + g.width / 2);
+  logo.style.setProperty("--gem-dx", `${dx.toFixed(1)}px`);
+}
+alignGem();
+addEventListener("resize", alignGem);
+addEventListener("load", alignGem);
 
 /* ---------- Загрузка и вход ---------- */
 const loader = $("#loader"), loaderText = $("#loaderText");
@@ -438,10 +451,10 @@ function start() {
   const mobile = matchMedia("(max-width: 900px)").matches;
   const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
   tl.to(loader, { opacity: 0, duration: .35, onComplete: () => { Gems.unmount($(".loader__gem-wrap")); loader.remove(); } })
-    .from(".sim", { opacity: 0, y: 40, duration: .7, clearProps: "transform" }, "-=.15")
+    .from(".sim", { opacity: 0, duration: .7 }, "-=.15")
     .from(".logo__word--l", { x: -40, opacity: 0, duration: .5, ease: "back.out(2)" }, "<.1")
     .from(".logo__word--r", { x: 40, opacity: 0, duration: .5, ease: "back.out(2)" }, "<")
-    .from(".logo__gem-wrap", { y: -60, scale: .3, opacity: 0, duration: .6, ease: "back.out(2.4)" }, "<.1")
+    .from(".logo__gem-wrap", { scale: .3, opacity: 0, duration: .6, ease: "back.out(2.4)" }, "<.1")
     .from(".panel-l", mobile ? { y: 40, opacity: 0, duration: .6, clearProps: "transform" } : { x: -120, opacity: 0, duration: .7, ease: "back.out(1.4)", clearProps: "transform" }, "<")
     .from(".event", mobile ? { y: 50, opacity: 0, duration: .6, clearProps: "transform" } : { x: 120, opacity: 0, duration: .7, ease: "back.out(1.4)", clearProps: "transform" }, "<.05")
     .from(".badge", { scale: 0, opacity: 0, duration: .45, stagger: .06, ease: "back.out(2.5)" }, "-=.35")
@@ -453,11 +466,6 @@ function start() {
 }
 
 function ambient() {
-  // Кристалл: покачивание (вращение — в 3D-рендере ниже)
-  gsap.to(".logo__gem-wrap", { y: -6, rotation: 4, duration: 1.8, ease: "sine.inOut", yoyo: true, repeat: -1 });
-  // Персонаж дышит и чуть покачивается
-  gsap.to("#simImg", { scale: 1.006, duration: 2.4, ease: "sine.inOut", yoyo: true, repeat: -1 });
-  gsap.to("#simImg", { rotation: .5, duration: 3.6, ease: "sine.inOut", yoyo: true, repeat: -1, delay: .6 });
   // Облачка плавают
   gsap.to(".thought--l", { y: -8, x: 3, duration: 2.6, ease: "sine.inOut", yoyo: true, repeat: -1 });
   gsap.to(".thought--r", { y: -10, x: -3, duration: 3.1, ease: "sine.inOut", yoyo: true, repeat: -1, delay: .4 });

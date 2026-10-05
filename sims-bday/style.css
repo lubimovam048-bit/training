@@ -95,7 +95,8 @@ button { font: inherit; color: inherit; }
 /* Logo */
 .logo {
   position: absolute; z-index: 4; left: 50%; top: clamp(18px, 4.5vh, 52px);
-  translate: -50% 0;
+  /* --gem-dx (из main.js) ставит кристалл точно над головой сима */
+  translate: calc(-50% + var(--gem-dx, 0px)) 0;
   margin: 0; display: flex; align-items: center;
   width: min(590px, 44vw);
 }
@@ -304,7 +305,7 @@ button { font: inherit; color: inherit; }
     padding: 0 16px calc(110px + env(safe-area-inset-bottom));
     min-height: 0; overflow: visible;
   }
-  .logo { position: relative; left: auto; top: auto; translate: none; margin: max(18px, env(safe-area-inset-top)) auto 0; width: min(460px, 86vw); }
+  .logo { position: relative; left: auto; top: auto; translate: var(--gem-dx, 0px) 0; margin: max(18px, env(safe-area-inset-top)) auto 0; width: min(460px, 86vw); }
 
   .sim {
     position: relative; left: auto; top: auto;

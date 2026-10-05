@@ -290,9 +290,9 @@ function cycleClouds() {
     const src = CLOUD_ICONS[(cloudStep + k) % CLOUD_ICONS.length];
     if (!hasGSAP || reduceMotion) { img.src = src; return; }
     gsap.timeline()
-      .to(img, { scale: 0, opacity: 0, duration: .25, ease: "back.in(2)", delay: k * .5 })
+      .to(img, { opacity: 0, duration: .3, ease: "power1.out", delay: k * .5 })
       .call(() => { img.src = src; })
-      .to(img, { scale: 1, opacity: 1, duration: .45, ease: "back.out(2.5)" });
+      .to(img, { opacity: 1, duration: .4, ease: "power1.in" });
   });
 }
 

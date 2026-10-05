@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy B'Day, Марина!</title>
+<meta name="description" content="Событие: День рождения. Марина приглашает на вечеринку в стиле The Sims.">
+<meta property="og:title" content="Событие: День рождения Марины">
+<meta property="og:description" content="Присоединяйся к событию! Вечеринка в стиле The Sims.">
+<meta property="og:image" content="assets/og.jpg">
+<meta name="theme-color" content="#5794d1">
+<link rel="preload" as="image" href="assets/marina.webp" fetchpriority="high">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="is-loading">
+
+<!-- 1. Загрузочный экран -->
+<div class="loader" id="loader" aria-hidden="true">
+  <img class="loader__gem" src="assets/plumbob.webp" alt="">
+  <p class="loader__text" id="loaderText">Надуваем шарики…</p>
+</div>
+
+<!-- Фон: градиент + концентрические круги (параллакс) -->
+<div class="bg" aria-hidden="true">
+  <div class="bg__layer" data-depth="12">
+    <svg viewBox="-600 -600 1200 1200" preserveAspectRatio="xMidYMid slice"><circle r="560" class="ring ring--a"/><circle r="430" class="ring ring--b"/></svg>
+  </div>
+  <div class="bg__layer" data-depth="24">
+    <svg viewBox="-600 -600 1200 1200" preserveAspectRatio="xMidYMid slice"><circle r="330" class="ring ring--c"/><circle r="240" class="ring ring--d"/></svg>
+  </div>
+</div>
+
+<button class="sound" id="soundBtn" type="button" aria-pressed="false" aria-label="Включить звук">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path class="sound__spk" d="M4 9h3l5-4v14l-5-4H4z"/><path class="sound__on" d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/><path class="sound__off" d="M16 9l5 6M21 9l-5 6"/></svg>
+</button>
+
+<main class="hero">
+  <!-- Логотип: «Happy» · кристалл · «B'Day!» -->
+  <h1 class="logo" aria-label="Happy B'Day!">
+    <img class="logo__word logo__word--l" src="assets/logo-happy.webp" alt="" width="266" height="136">
+    <span class="logo__gem-wrap"><img class="logo__gem" src="assets/plumbob.webp" alt="" width="240" height="507"></span>
+    <img class="logo__word logo__word--r" src="assets/logo-bday.webp" alt="" width="239" height="128">
+  </h1>
+
+  <!-- Персонаж + облачка -->
+  <div class="sim" id="sim">
+    <div class="sim__sparks" id="sparks" aria-hidden="true"></div>
+    <img class="sim__img" id="simImg" src="assets/marina.webp" alt="Марина — персонаж в стиле The Sims в чёрном платье" width="1000" height="1615" fetchpriority="high">
+    <div class="thought thought--l" aria-hidden="true">
+      <span class="thought__dot d1"></span><span class="thought__dot d2"></span><span class="thought__dot d3"></span>
+      <div class="thought__cloud"><img class="thought__icon" src="assets/i-cake.webp" alt=""></div>
+    </div>
+    <div class="thought thought--r" aria-hidden="true">
+      <span class="thought__dot d1"></span><span class="thought__dot d2"></span><span class="thought__dot d3"></span>
+      <div class="thought__cloud"><img class="thought__icon" src="assets/i-party.webp" alt=""></div>
+    </div>
+  </div>
+
+  <!-- Левая панель: имя + рубежи -->
+  <aside class="panel-l" aria-label="Персонаж">
+    <div class="namebar glass">
+      <img src="assets/sim-young.webp" alt="" class="namebar__sim">
+      <div class="namebar__bar"><span>Марина</span></div>
+      <img src="assets/sim-adult.webp" alt="" class="namebar__sim">
+    </div>
+
+    <section class="milestones glass">
+      <h2 class="milestones__title">Рубежи – <span class="age" id="ageLabel">Молодая</span></h2>
+      <div class="milestones__groups" id="groups"><!-- JS --></div>
+    </section>
+  </aside>
+
+  <!-- Правая панель: событие -->
+  <section class="event glass" aria-labelledby="eventTitle">
+    <header class="event__head">
+      <img class="event__gem" src="assets/plumbob.webp" alt="">
+      <div>
+        <p class="event__kicker">Событие:</p>
+        <h2 class="event__title" id="eventTitle">День рождения</h2>
+      </div>
+    </header>
+
+    <p class="event__text">Марина отмечает день рождения. Время летит незаметно! Приглашаю тебя на вечеринку в стиле The Sims.</p>
+
+    <dl class="facts">
+      <div class="fact"><dt><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span class="sr">Дата</span></dt><dd id="factDate"></dd></div>
+      <div class="fact"><dt><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg><span class="sr">Время</span></dt><dd id="factTime"></dd></div>
+      <div class="fact fact--wide"><dt><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span class="sr">Место</span></dt><dd><a id="factPlace" target="_blank" rel="noopener"></a></dd></div>
+    </dl>
+
+    <div class="goals">
+      <div class="progress" role="timer" aria-live="off">
+        <div class="progress__track">
+          <div class="progress__seg"></div><div class="progress__seg"></div><div class="progress__seg"></div>
+          <div class="progress__fill" id="progFill"></div>
+          <div class="coin" id="coin" aria-hidden="true"><span>§</span></div>
+        </div>
+        <svg class="progress__clock" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12"/></svg>
+      </div>
+      <p class="countdown" id="countdown">До вечеринки: —</p>
+
+      <ul class="goal-list">
+        <li class="goal goal--main" id="goalMain">
+          <img src="assets/i-cake.webp" alt="" class="goal__icon">
+          <span class="goal__name"><b>Основная цель:</b><br>Задуть свечи</span>
+          <span class="goal__count"><span class="goal__check" aria-hidden="true">✓</span><span data-count>0</span>/1</span>
+        </li>
+        <li class="goal goal--tap" id="goalJokes" role="button" tabindex="0" aria-label="Рассказать анекдот">
+          <img src="assets/i-dog.webp" alt="" class="goal__icon">
+          <span class="goal__name">Рассказывать анекдоты</span>
+          <span class="goal__count"><span class="goal__check" aria-hidden="true">✓</span><span data-count>0</span>/2</span>
+        </li>
+        <li class="goal goal--tap" id="goalEat" role="button" tabindex="0" aria-label="Перекусить">
+          <img src="assets/i-food.webp" alt="" class="goal__icon goal__icon--food">
+          <span class="goal__name">Есть</span>
+          <span class="goal__count"><span class="goal__check" aria-hidden="true">✓</span><span data-count>0</span>/4</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="cta-wrap">
+      <button class="cta" id="cta" type="button">
+        <img src="assets/plumbob.webp" alt="" class="cta__gem">
+        <span class="cta__label" id="ctaLabel">Присоединиться<br>к событию</span>
+      </button>
+    </div>
+  </section>
+</main>
+
+<!-- Поповер для рубежей -->
+<div class="pop glass" id="pop" role="dialog" aria-modal="false" hidden>
+  <img class="pop__icon" id="popIcon" alt="">
+  <div>
+    <p class="pop__kicker" id="popKicker"></p>
+    <h3 class="pop__title" id="popTitle"></h3>
+    <p class="pop__text" id="popText"></p>
+  </div>
+</div>
+
+<!-- Уведомление в стиле Sims -->
+<div class="toast glass" id="toast" role="status" aria-live="polite" hidden>
+  <img class="toast__icon" id="toastIcon" alt="">
+  <div><p class="toast__title" id="toastTitle"></p><p class="toast__text" id="toastText"></p></div>
+</div>
+
+<!-- Модалка после «Присоединиться» -->
+<div class="modal" id="modal" hidden>
+  <div class="modal__box glass" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <img src="assets/plumbob.webp" alt="" class="modal__gem">
+    <h3 class="modal__title" id="modalTitle">Ты в списке гостей!</h3>
+    <p class="modal__text" id="modalText"></p>
+    <div class="modal__actions">
+      <button class="btn btn--green" id="icsBtn" type="button">Добавить в календарь</button>
+      <button class="btn btn--ghost" id="modalClose" type="button">Ура, жду!</button>
+    </div>
+  </div>
+</div>
+
+<div class="confetti" id="confetti" aria-hidden="true"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

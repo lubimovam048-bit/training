@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="box" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fc4ff"/><stop offset="1" stop-color="#2f7fe0"/></linearGradient>
+    <linearGradient id="lid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a9dbff"/><stop offset="1" stop-color="#4f9cf0"/></linearGradient>
+    <linearGradient id="rib" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff7ab8"/><stop offset=".5" stop-color="#ffb3d6"/><stop offset="1" stop-color="#ff5aa5"/></linearGradient>
+  </defs>
+  <path d="M60 34c-6-14-26-18-28-6-2 10 16 10 28 6zM60 34c6-14 26-18 28-6 2 10-16 10-28 6z" fill="url(#rib)" stroke="#d63a86" stroke-width="2.5" stroke-linejoin="round"/>
+  <rect x="22" y="56" width="76" height="52" rx="6" fill="url(#box)" stroke="#1d5fb4" stroke-width="3"/>
+  <rect x="16" y="36" width="88" height="22" rx="6" fill="url(#lid)" stroke="#1d5fb4" stroke-width="3"/>
+  <rect x="52" y="36" width="16" height="72" fill="url(#rib)" stroke="#d63a86" stroke-width="2.5"/>
+  <path d="M24 40h30" stroke="#fff" stroke-opacity=".7" stroke-width="4" stroke-linecap="round"/>
+</svg>

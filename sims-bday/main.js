@@ -466,9 +466,7 @@ function start() {
 }
 
 function ambient() {
-  // Облачка плавают
-  gsap.to(".thought--l", { y: -8, x: 3, duration: 2.6, ease: "sine.inOut", yoyo: true, repeat: -1 });
-  gsap.to(".thought--r", { y: -10, x: -3, duration: 3.1, ease: "sine.inOut", yoyo: true, repeat: -1, delay: .4 });
+  // Облачка стоят на месте, меняются только иконки
   setInterval(cycleClouds, 3200);
   initParallax();
 }

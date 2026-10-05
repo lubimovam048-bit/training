@@ -438,7 +438,7 @@ function start() {
   const mobile = matchMedia("(max-width: 900px)").matches;
   const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
   tl.to(loader, { opacity: 0, duration: .35, onComplete: () => { Gems.unmount($(".loader__gem-wrap")); loader.remove(); } })
-    .from(".sim", { opacity: 0, y: 40, duration: .7 }, "-=.15")
+    .from(".sim", { opacity: 0, y: 40, duration: .7, clearProps: "transform" }, "-=.15")
     .from(".logo__word--l", { x: -40, opacity: 0, duration: .5, ease: "back.out(2)" }, "<.1")
     .from(".logo__word--r", { x: 40, opacity: 0, duration: .5, ease: "back.out(2)" }, "<")
     .from(".logo__gem-wrap", { y: -60, scale: .3, opacity: 0, duration: .6, ease: "back.out(2.4)" }, "<.1")

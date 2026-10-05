@@ -311,7 +311,6 @@ function initParallax() {
   const onTilt = (e) => {
     if (e.gamma == null) return;
     move(Math.max(-1, Math.min(1, e.gamma / 25)), Math.max(-1, Math.min(1, (e.beta - 45) / 25)));
-    Gaze.tilt(Math.max(-1, Math.min(1, e.gamma / 20)), Math.max(-1, Math.min(1, (e.beta - 45) / 30)));
   };
   const DOE = window.DeviceOrientationEvent;
   if (DOE && typeof DOE.requestPermission === "function") {
@@ -421,37 +420,6 @@ function alignGem() {
 alignGem();
 addEventListener("resize", alignGem);
 addEventListener("load", alignGem);
-
-/* ---------- Глаза следят за курсором / пальцем ---------- */
-const Gaze = (() => {
-  const body = $("#simBody"), img = $("#simImg");
-  let tx = 0, ty = 0, x = 0, y = 0, lastPointer = 0, raf = 0, resetTimer;
-  function lookAt(px, py) {
-    const r = img.getBoundingClientRect();
-    const dx = px - (r.left + r.width * 0.47), dy = py - (r.top + r.height * 0.083);
-    const d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 260);
-    tx = (dx / d) * k; ty = (dy / d) * k;
-    lastPointer = Date.now();
-    kick();
-  }
-  function center() { tx = 0; ty = 0; kick(); }
-  function tilt(nx, ny) { if (Date.now() - lastPointer > 2500) { tx = nx; ty = ny; kick(); } }
-  function step() {
-    x += (tx - x) * 0.2; y += (ty - y) * 0.2;
-    body.style.setProperty("--ex", x.toFixed(3));
-    body.style.setProperty("--ey", y.toFixed(3));
-    raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.002 ? requestAnimationFrame(step) : 0;
-  }
-  function kick() { if (!raf) raf = requestAnimationFrame(step); }
-  addEventListener("pointermove", (e) => lookAt(e.clientX, e.clientY), { passive: true });
-  addEventListener("pointerdown", (e) => lookAt(e.clientX, e.clientY), { passive: true });
-  document.documentElement.addEventListener("mouseleave", center);
-  addEventListener("pointerup", (e) => {
-    if (e.pointerType === "mouse") return;
-    clearTimeout(resetTimer); resetTimer = setTimeout(center, 1800);
-  }, { passive: true });
-  return { tilt };
-})();
 
 /* ---------- Загрузка и вход ---------- */
 const loader = $("#loader"), loaderText = $("#loaderText");

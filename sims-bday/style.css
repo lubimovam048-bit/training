@@ -118,15 +118,7 @@ button { font: inherit; color: inherit; }
   /* центровка отступом (ширина = высота × 1000/1615), а не transform — его анимирует GSAP */
   margin-left: calc(clamp(860px, 110vh, 1200px) * -0.3096);
 }
-.sim__body { position: absolute; inset: 0; z-index: 1; }
-/* Глаза следят за курсором: --ex/--ey (−1…1) ставит main.js */
-.eye { position: absolute; z-index: 2; pointer-events: none; overflow: hidden; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
-.eye--l { left: 43.6133%; top: 7.5142%; width: 2.6817%; height: 0.9611%; -webkit-mask-image: url("assets/eye-l.png"); mask-image: url("assets/eye-l.png"); }
-.eye--r { left: 49.1179%; top: 8.2132%; width: 3.3169%; height: 0.7864%; -webkit-mask-image: url("assets/eye-r.png"); mask-image: url("assets/eye-r.png"); }
-.eye--l .iris { left: 10.526%; top: -9.091%; width: 65.789%; height: 113.636%; }
-.eye--r .iris { left: 19.149%; top: -22.222%; width: 51.064%; height: 133.333%; }
-.iris { position: absolute; max-width: none; transform: translate(calc(var(--ex, 0) * 17%), calc(var(--ey, 0) * 7%)); will-change: transform; }
-.sim__img { position: relative; width: 100%; height: 100%; object-fit: contain; transform-origin: 50% 95%; cursor: pointer; filter: drop-shadow(0 10px 30px rgba(20, 50, 100, .18)); }
+.sim__img { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: contain; transform-origin: 50% 95%; cursor: pointer; filter: drop-shadow(0 10px 30px rgba(20, 50, 100, .18)); }
 .sim__sparks { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
 .spark {
   position: absolute; width: 14px; height: 14px; border-radius: 50%;
@@ -322,8 +314,7 @@ button { font: inherit; color: inherit; }
     -webkit-mask-image: linear-gradient(#000 82%, transparent);
     mask-image: linear-gradient(#000 82%, transparent);
   }
-  .sim__body { inset: auto; left: 50%; top: 0; height: 205%; aspect-ratio: 1000 / 1615; margin-left: calc(min(58svh, 520px) * -0.6347); }
-  .sim__img { max-width: none; }
+  .sim__img { position: absolute; left: 50%; top: 0; width: auto; height: 205%; max-width: none; margin-left: calc(min(58svh, 520px) * -0.6347); }
   .thought { width: 30%; }
   .thought--l { left: 2%; top: 4%; }
   .thought--r { left: auto; right: 1%; top: 12%; width: 31%; }

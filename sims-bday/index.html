@@ -48,7 +48,12 @@
   <!-- Персонаж + облачка -->
   <div class="sim" id="sim">
     <div class="sim__sparks" id="sparks" aria-hidden="true"></div>
-    <img class="sim__img" id="simImg" src="assets/marina.webp" alt="Марина — персонаж в стиле The Sims в чёрном платье" width="1000" height="1615" fetchpriority="high">
+    <div class="sim__body" id="simBody">
+      <img class="sim__img" id="simImg" src="assets/marina.webp" alt="Марина — персонаж в стиле The Sims в чёрном платье" width="1000" height="1615" fetchpriority="high">
+      <!-- Глаза: радужки отдельными слоями, обрезаны контуром века -->
+      <div class="eye eye--l" aria-hidden="true"><img class="iris" src="assets/iris-l.webp" alt=""></div>
+      <div class="eye eye--r" aria-hidden="true"><img class="iris" src="assets/iris-r.webp" alt=""></div>
+    </div>
     <div class="thought thought--l" aria-hidden="true">
       <span class="thought__dot d1"></span><span class="thought__dot d2"></span><span class="thought__dot d3"></span>
       <div class="thought__cloud"><img class="thought__icon" src="assets/i-cake.webp" alt=""></div>

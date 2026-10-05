@@ -101,8 +101,8 @@ button { font: inherit; color: inherit; }
   width: min(590px, 44vw);
 }
 .logo__word { height: auto; filter: drop-shadow(0 4px 6px rgba(10, 40, 110, .25)); }
-.logo__word--l { width: 45%; }
-.logo__word--r { width: 40.5%; margin-top: 1%; }
+.logo__word--l { width: 43.4%; }
+.logo__word--r { width: 44.6%; margin-top: 1%; }
 .logo__gem-wrap { position: relative; width: 11%; margin: 0 1% 0 0; display: grid; place-items: center; }
 .logo__gem { width: 100%; height: auto; filter: drop-shadow(0 6px 10px rgba(0, 90, 0, .35)); }
 /* 3D-кристалл поверх PNG-заглушки (PNG остаётся, если WebGL недоступен) */
@@ -305,7 +305,7 @@ button { font: inherit; color: inherit; }
     padding: 0 16px calc(110px + env(safe-area-inset-bottom));
     min-height: 0; overflow: visible;
   }
-  .logo { position: relative; left: auto; top: auto; translate: var(--gem-dx, 0px) 0; margin: max(18px, env(safe-area-inset-top)) auto 0; width: min(460px, 86vw); }
+  .logo { position: relative; left: auto; top: auto; translate: var(--gem-dx, 0px) 0; margin: max(18px, env(safe-area-inset-top)) auto 0; width: min(460px, 78vw); }
 
   .sim {
     position: relative; left: auto; top: auto;

@@ -207,7 +207,7 @@ function ageUp() {
     .call(() => { label.textContent = "Взрослая?"; }, null, .9)
     .to(label, { opacity: 0, duration: .1, repeat: 5, yoyo: true, ease: "none" }, 1.0)
     .call(() => { label.textContent = "Молодая"; }, null, 1.65)
-    .fromTo(label, { scale: 1.3, color: "#2fae47" }, { scale: 1, color: "#1546b4", duration: .6, ease: "elastic.out(1, .4)" }, 1.65)
+    .fromTo(label, { scale: 1.08, color: "#2fae47" }, { scale: 1, color: "#1546b4", duration: .45, ease: "power2.out" }, 1.65)
     .call(() => showToast("assets/sim-young.webp", "Марина стала… Молодой!", "Опять. Возраст не меняется, проверено."), null, 1.7);
 }
 $("#simImg").addEventListener("click", ageUp);

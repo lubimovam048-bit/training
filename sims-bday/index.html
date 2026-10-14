@@ -13,7 +13,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=e92db29">
+<link rel="stylesheet" href="style.css?v=d2">
+<link rel="stylesheet" href="details.css?v=d2">
 </head>
 <body class="is-loading">
 
@@ -130,6 +131,77 @@
   </section>
 </main>
 
+<!-- ===== 2. Детали события ===== -->
+<section class="det" aria-labelledby="evTitle"><div class="panel-w">
+  <span class="deco d1"></span><span class="deco d2"></span><span class="deco d3"></span><span class="deco d4"></span>
+  <header class="ev-head">
+    <h2 class="ev-title" id="evTitle">Детали события</h2>
+    <p class="ev-sub" id="evSub">Приглашенные персонажи</p>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tGuests" aria-selected="true" aria-controls="pGuests" data-sub="Приглашенные персонажи" aria-label="Гости">
+        <img class="ic" src="assets/details/tab-envelope.webp" alt=""><img class="check" src="assets/details/tab-check.webp" alt="">
+      </button>
+      <button class="tab" role="tab" id="tPlace" aria-selected="false" aria-controls="pPlace" data-sub="Место проведения" aria-label="Место">
+        <img class="ic" src="assets/details/tab-place.webp" alt="" style="width:58%"><img class="check" src="assets/details/tab-check.webp" alt="">
+      </button>
+    </div>
+  </header>
+
+  <div class="panes">
+    <div class="pane" id="pGuests" role="tabpanel" aria-labelledby="tGuests"><ul class="grid" id="grid"></ul></div>
+    <div class="pane" id="pPlace" role="tabpanel" aria-labelledby="tPlace" hidden>
+      <div class="place">
+        <div class="lot"><img src="assets/details/tab-place.webp" alt=""></div>
+        <div class="pfacts">
+          <div class="pfact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#2f80e4" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><div><b>Дата и время</b><span id="plDate" class="tbd">уточняется</span></div></div>
+          <div class="pfact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#2f80e4" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span><div><b>Адрес</b><span id="plAddr" class="tbd">уточняется</span></div></div>
+          <div class="pfact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#2f80e4" stroke-width="2"><path d="M8 3l4 3 4-3 4 4-3 3v11H7V10L4 7z"/></svg></span><div><b>Дресс-код</b><span id="plDress">Как у твоего сима</span></div></div>
+          <a class="mapbtn" id="plMap" aria-disabled="true">Открыть на карте</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+
+<!-- ===== Карточка гостя ===== -->
+<div class="gpage"></div>
+<div class="gmodal"><div class="fit">
+  <article class="card" id="card" role="dialog" aria-modal="true" aria-labelledby="gname">
+    <div class="nametab"><img src="assets/details/plumbob.webp" alt=""><span id="gname"></span></div>
+    <button class="close" id="close" aria-label="Закрыть"><img src="assets/details/close.webp" alt=""></button>
+
+    <div class="stage">
+      <div class="circles"></div>
+      <div class="gfull"><img id="gfullImg" alt=""></div>
+      <div class="bubble b1" id="b1"><img class="cl" src="assets/details/cloud.webp" alt=""><img class="ic" alt=""><span class="tip"></span></div>
+      <div class="bubble b2" id="b2"><img class="cl" src="assets/details/cloud.webp" alt=""><img class="ic" alt=""><span class="tip"></span></div>
+    </div>
+
+    <div class="side"><p class="gpreview" id="gprev"></p>
+      <div class="gage gglass">
+        <img src="assets/details/stage-l.webp" alt="">
+        <div class="agebar"><div class="fill" id="agefill"></div><span id="agetxt"></span></div>
+        <img src="assets/details/stage-r.webp" alt="">
+      </div>
+      <section class="panel gglass career">
+        <h3>Карьера</h3>
+        <div class="items">
+          <div class="row"><img id="cicon" alt=""><b id="ctitle"></b></div>
+          <div class="prod">
+            <p>Продуктивность: <em id="ptxt"></em></p>
+            <div class="lines"><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="marker" id="marker"></div>
+          </div>
+        </div>
+      </section>
+      <section class="panel grey traits"><h3>Черты характера</h3><ul id="traits"></ul></section>
+      <section class="panel grey rels"><h3>Отношения</h3><div class="strip" id="strip"></div></section>
+    </div>
+  </article>
+</div></div>
+<div class="gtoast" id="gtoast"></div>
+
 <!-- Поповер для рубежей -->
 <div class="pop glass" id="pop" role="dialog" aria-modal="false" hidden>
   <img class="pop__icon" id="popIcon" alt="">
@@ -163,6 +235,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="main.js?v=e92db29"></script>
+<script src="main.js?v=d2"></script>
+<script src="details.js?v=d2"></script>
 </body>
 </html>

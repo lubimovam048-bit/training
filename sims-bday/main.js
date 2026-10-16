@@ -8,9 +8,10 @@ const PARTY = {
   durationHours: 5,
   // С какого момента «монетка» начинает ползти по прогресс-бару
   inviteSent: "2026-10-05T00:00:00+03:00",
-  place: "Адрес пришлю позже",
+  place: "ДНП «Семь ручьёв», Центральная ул., Колтуши",
   // Ссылка на карту (Яндекс/Google). Пусто — адрес без ссылки
-  mapUrl: "",
+  mapUrl: "https://yandex.ru/maps/?pt=30.725369,59.916494&z=16&l=map",
+  mapUrlGoogle: "https://www.google.com/maps/search/?api=1&query=59.916494,30.725369",
 };
 
 /* Истории для значков рубежей. Подставь свои. */
@@ -269,7 +270,7 @@ $("#icsBtn").addEventListener("click", () => {
     `DTSTART:${fmt(startDate)}`, `DTEND:${fmt(endDate)}`,
     "SUMMARY:День рождения Марины — вечеринка в стиле The Sims",
     `LOCATION:${esc(PARTY.place)}`,
-    `DESCRIPTION:${esc("Основная цель: задуть свечи. Дресс-код: как у твоего сима.")}${PARTY.mapUrl ? "\\n" + esc(PARTY.mapUrl) : ""}`,
+    `DESCRIPTION:${esc("Основная цель: задуть свечи.")}${PARTY.mapUrl ? "\\n" + esc(PARTY.mapUrl) : ""}`,
     "BEGIN:VALARM", "TRIGGER:-P1D", "ACTION:DISPLAY", "DESCRIPTION:Завтра вечеринка!", "END:VALARM",
     "END:VEVENT", "END:VCALENDAR",
   ].join("\r\n");

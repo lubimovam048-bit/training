@@ -256,6 +256,58 @@ body.open .gpage{pointer-events:auto}
 @media (min-width:901px){
   .cta-wrap{opacity:1!important;visibility:visible!important;filter:none!important}
 }
+/* облачка мыслей */
+.gmodal .bubble .ic{object-fit:contain;transition:opacity .26s,scale .26s}
+.gmodal .bubble .ic.swap{opacity:0;scale:.6}
+.gmodal .bubble .ic.por{border-radius:50%;object-fit:cover;object-position:top;background:#dbe8f0;box-shadow:0 0 0 3px #fff,0 2px 6px rgba(0,40,100,.25)}
+.gmodal .bubble.b1 .ic.por{width:70px;height:70px;left:62px;top:24px}
+.gmodal .bubble.b2 .ic.por{width:68px;height:68px;left:60px;top:38px}
+.gmodal .bubble{cursor:default}
+.gmodal .bubble .tip{max-width:240px;white-space:normal;text-align:center;line-height:1.3;width:max-content}
+@media (hover:none){.gmodal .bubble .tip{opacity:1;font-size:20px}}
+/* вкладка «Вишлист» */
+.wish{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:32px;align-items:center;max-width:980px;margin:0 auto}
+.wish-art{aspect-ratio:4/3;border-radius:12px;border:1px solid #dbe5f6;display:grid;place-items:center;background:linear-gradient(180deg,#e6f8ff 0%,#d6ecff 45%,#c6dbff 100%)}
+.wish-art{aspect-ratio:4/5;overflow:hidden;position:relative;place-items:end center}
+.wish-art::before{content:"";position:absolute;left:50%;top:50%;width:85%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,#fff 0%,rgba(255,255,255,0) 70%);opacity:.8}
+.wish-art img{position:absolute;left:50%;bottom:0;height:96%;width:auto!important;max-width:none;display:block;translate:-50% 0;transform-origin:50% 100%;transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+.wish:hover .wish-art img{transform:scale(1.03) rotate(-1deg)}
+@media (max-width:600px){.wish-art{aspect-ratio:1}}
+.wish-kicker{font:700 13px var(--ui);color:#2fae47;text-transform:uppercase;letter-spacing:.06em}
+.wish-title{font:700 clamp(26px,3vw,36px)/1.15 var(--ui);color:#0049af;margin:6px 0 12px}
+.wish-text{font:500 17px/1.5 var(--ui);color:#3e567b;margin-bottom:22px}
+.wish-btn{display:inline-flex;align-items:center;gap:12px;padding:14px 28px 14px 18px;border-radius:999px;text-decoration:none;color:#fff;font:700 18px var(--ui);background:linear-gradient(180deg,#5dd06a,#2fae47 50%,#1f9136);box-shadow:inset 0 2px 0 rgba(255,255,255,.45),0 8px 20px rgba(20,120,50,.3);transition:transform .15s,filter .15s}
+.wish-btn img{width:30px;height:30px}
+.wish-btn span{font-size:16px;opacity:.85}
+.wish-btn:hover{transform:translateY(-2px);filter:brightness(1.05)}
+.wish-note{margin-top:10px;font:500 13px var(--ui);color:#8fa8cc}
+@media (max-width:600px){.wish{grid-template-columns:1fr;gap:20px}.wish-btn{width:100%;justify-content:center}.tabs{gap:10px;width:100%}.tab{width:auto;flex:0 1 120px;min-width:0}}
+/* вкладки: своя иконка для активного и неактивного состояния */
+.tab .ic{width:58%;height:auto}
+.tab .ic-on{display:none}
+.tab[aria-selected="true"] .ic-on{display:block}
+.tab[aria-selected="true"] .ic-off{display:none}
+/* вкладка «Место»: галерея дома */
+.route{background:#edf2fc;border:1px solid #dbe5f6;border-radius:8px;padding:14px 16px}
+.route-h{display:block;font:700 13px var(--ui);color:#0049af;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+.route ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.route li{font:500 15px/1.4 var(--ui);color:#3e567b}
+.route li b{color:#0049af}
+.det .place{align-items:start}
+.det .lot.gal{aspect-ratio:auto;display:flex;flex-direction:column;gap:10px;padding:10px;background:#edf2fc}
+.det .lot.gal img{animation:none;width:auto}
+.gal-main{position:relative;aspect-ratio:4/3;border-radius:8px;overflow:hidden}
+.gal-main img{width:100%!important;height:100%;object-fit:cover;display:block;transition:opacity .18s}
+.gal-main img.fade{opacity:0}
+.gal-tag{position:absolute;left:10px;bottom:10px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.92);font:700 13px var(--ui);color:#0049af;box-shadow:0 2px 8px rgba(0,40,100,.2)}
+.gal-thumbs{display:flex;gap:10px}
+.gal-thumbs button{flex:1;aspect-ratio:16/10;padding:0;border:3px solid transparent;border-radius:8px;overflow:hidden;cursor:pointer;background:none;opacity:.7;transition:opacity .2s,border-color .2s}
+.gal-thumbs button:hover{opacity:1}
+.gal-thumbs button.on{border-color:#49c42b;opacity:1}
+.gal-thumbs img{width:100%!important;height:100%;object-fit:cover;display:block}
+.mapbtns{display:flex;flex-wrap:wrap;gap:10px}
+.mapbtn.ghost{background:#fff;color:#0049af;box-shadow:inset 0 0 0 2px #b9cbe6}
+.mapbtn.ghost[aria-disabled="true"]{display:none}
 /* первый экран: подпись возраста не меняет ширину строки, иконка в подсказке рубежа не сплющивается */
 .milestones__title{display:flex;justify-content:center;align-items:baseline;gap:.3em;white-space:nowrap}
 .milestones__title .age{display:inline-block;min-width:5.6em;text-align:left;transform-origin:0 60%;will-change:transform,opacity}

@@ -13,8 +13,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=d2">
-<link rel="stylesheet" href="details.css?v=d2">
+<link rel="stylesheet" href="style.css?v=d6">
+<link rel="stylesheet" href="details.css?v=d6">
 </head>
 <body class="is-loading">
 
@@ -139,11 +139,12 @@
     <p class="ev-sub" id="evSub">Приглашенные персонажи</p>
     <div class="tabs" role="tablist">
       <button class="tab" role="tab" id="tGuests" aria-selected="true" aria-controls="pGuests" data-sub="Приглашенные персонажи" aria-label="Гости">
-        <img class="ic" src="assets/details/tab-envelope.webp" alt=""><img class="check" src="assets/details/tab-check.webp" alt="">
+        <img class="ic ic-on" src="assets/details/tab-envelope.webp" alt=""><img class="ic ic-off" src="assets/details/tab-envelope-off.webp" alt=""><img class="check" src="assets/details/tab-check.webp" alt="">
       </button>
       <button class="tab" role="tab" id="tPlace" aria-selected="false" aria-controls="pPlace" data-sub="Место проведения" aria-label="Место">
-        <img class="ic" src="assets/details/tab-place.webp" alt="" style="width:58%"><img class="check" src="assets/details/tab-check.webp" alt="">
+        <img class="ic ic-on" src="assets/details/tab-place-on.webp" alt=""><img class="ic ic-off" src="assets/details/tab-place.webp" alt=""><img class="check" src="assets/details/tab-check.webp" alt="">
       </button>
+      <button class="tab" role="tab" id="tWish" aria-selected="false" aria-controls="pWish" data-sub="Вишлист именинницы" aria-label="Вишлист"><img class="ic ic-on" src="assets/details/tab-gift-on.svg" alt=""><img class="ic ic-off" src="assets/details/tab-gift-off.svg" alt=""><img class="check" src="assets/details/tab-check.webp" alt=""></button>
     </div>
   </header>
 
@@ -151,16 +152,16 @@
     <div class="pane" id="pGuests" role="tabpanel" aria-labelledby="tGuests"><ul class="grid" id="grid"></ul></div>
     <div class="pane" id="pPlace" role="tabpanel" aria-labelledby="tPlace" hidden>
       <div class="place">
-        <div class="lot"><img src="assets/details/tab-place.webp" alt=""></div>
+        <div class="lot gal"><div class="gal-main"><img id="galMain" src="assets/details/place-outside.webp" alt="Дом снаружи"><span class="gal-tag">Участок «Семь ручьёв»</span></div><div class="gal-thumbs"><button class="on" data-src="assets/details/place-outside.webp" data-alt="Дом снаружи" aria-label="Дом снаружи"><img src="assets/details/place-outside.webp" alt=""></button><button data-src="assets/details/place-inside.webp" data-alt="Столовая" aria-label="Столовая"><img src="assets/details/place-inside.webp" alt=""></button></div></div>
         <div class="pfacts">
           <div class="pfact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#2f80e4" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><div><b>Дата и время</b><span id="plDate" class="tbd">уточняется</span></div></div>
           <div class="pfact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#2f80e4" stroke-width="2"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span><div><b>Адрес</b><span id="plAddr" class="tbd">уточняется</span></div></div>
-          <div class="pfact"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#2f80e4" stroke-width="2"><path d="M8 3l4 3 4-3 4 4-3 3v11H7V10L4 7z"/></svg></span><div><b>Дресс-код</b><span id="plDress">Как у твоего сима</span></div></div>
-          <a class="mapbtn" id="plMap" aria-disabled="true">Открыть на карте</a>
+          <div class="route"><b class="route-h">Как добраться</b><ol><li><b>Ориентир — Коркинское озеро.</b> К посёлку ведёт один поворот на лесную дорогу.</li><li><b>Со стороны Колтушей и Янино</b> (новая отличная дорога): проезжаете Коркинское озеро и сразу поворачиваете направо.</li><li><b>Со стороны Мурманского шоссе</b> (дорога похуже): за 100 метров до Коркинского озера — поворот налево.</li><li>По лесной дороге — первые ворота слева: <b>ДНП «Семь ручьёв»</b>. Ворота закрыты — напишите или позвоните Марине, их откроют.</li><li>Дальше прямо: слева начнётся кованый забор с кирпичными колоннами, ворота с золотистым поликарбонатом. Это наш дом — вас встретят!</li></ol></div><div class="mapbtns"><a class="mapbtn" id="plMap" aria-disabled="true">Яндекс Карты</a><a class="mapbtn ghost" id="plMapG" aria-disabled="true">Google Maps</a></div>
         </div>
       </div>
     </div>
-  </div>
+  <div class="pane" id="pWish" role="tabpanel" aria-labelledby="tWish" hidden><div class="wish"><div class="wish-art"><img src="assets/details/wish-marina.webp" alt="Марина с горой подарков"></div><div class="wish-body"><p class="wish-kicker">Желание Марины</p><h3 class="wish-title">Вишлист именинницы</h3><p class="wish-text">Хочешь порадовать Марину подарком? В вишлисте собраны её желания — выбери то, что понравится, и отметь, чтобы подарки не повторялись.</p><a class="wish-btn" href="https://ohmywishes.com/users/hdpzbk9csj" target="_blank" rel="noopener"><img src="assets/details/tab-gift-on.svg" alt="">Открыть вишлист<span>↗</span></a><p class="wish-note">Откроется сайт ohmywishes</p></div></div></div>
+</div>
 </div></section>
 
 
@@ -235,7 +236,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="main.js?v=d2"></script>
-<script src="details.js?v=d2"></script>
+<script src="main.js?v=d6"></script>
+<script src="details.js?v=d6"></script>
 </body>
 </html>

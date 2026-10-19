@@ -170,7 +170,7 @@ function closePop() { pop.hidden = true; popOwner = null; }
 document.addEventListener("click", (e) => { if (!pop.hidden && !pop.contains(e.target)) closePop(); });
 addEventListener("scroll", () => { if (!pop.hidden) closePop(); }, { passive: true });
 groupsEl.addEventListener("scroll", () => { if (!pop.hidden) closePop(); }, { passive: true });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closePop(); closeModal(); closeSheet(); } });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closePop(); closeModal(); closeSheet(); closeRsvp(); } });
 
 /* ---------- Уведомления ---------- */
 const toast = $("#toast");
@@ -261,27 +261,74 @@ function confetti() {
 /* ---------- CTA ---------- */
 const modal = $("#modal");
 let joined = false;
+let guestName = "";
 function openModal() {
   const f = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Moscow" });
-  $("#modalText").textContent = `Жду тебя ${f.format(startDate)}. ${PARTY.place}.`;
+  $("#modalText").textContent = `${guestName ? guestName + ", ж" : "Ж"}ду тебя ${f.format(startDate)}. ${PARTY.place}.`;
   modal.hidden = false;
-  if (hasGSAP && !reduceMotion) gsap.fromTo(".modal__box", { scale: .85, opacity: 0 }, { scale: 1, opacity: 1, duration: .45, ease: "back.out(1.8)" });
+  if (hasGSAP && !reduceMotion) gsap.fromTo("#modal .modal__box", { scale: .85, opacity: 0 }, { scale: 1, opacity: 1, duration: .45, ease: "back.out(1.8)" });
   $("#icsBtn").focus({ preventScroll: true });
 }
 function closeModal() { if (!modal.hidden) { modal.hidden = true; $("#cta").focus({ preventScroll: true }); } }
 $("#modalClose").addEventListener("click", closeModal);
 modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
 
+function markJoined() {
+  joined = true;
+  $("#cta").classList.add("is-joined");
+  $("#ctaLabel").innerHTML = "Ты в событии!<br>Добавить в календарь";
+}
+// Гость уже отвечал с этого устройства — кнопка сразу «в событии»
+try { guestName = localStorage.getItem("rsvpName") || ""; if (guestName) markJoined(); } catch (e) {}
+
 $("#cta").addEventListener("click", () => {
+  if (joined) { confetti(); Sound.play("fanfare"); openModal(); return; }
+  openRsvp();
+});
+
+/* ---------- Ответ гостя: имя → Марине в Telegram (rsvp.php) ---------- */
+const rsvp = $("#rsvp"), rsvpForm = $("#rsvpForm"), rsvpErr = $("#rsvpErr"), rsvpSend = $("#rsvpSend");
+function openRsvp() {
+  rsvpErr.hidden = true;
+  rsvp.hidden = false;
+  if (hasGSAP && !reduceMotion) gsap.fromTo("#rsvp .modal__box", { scale: .85, opacity: 0 }, { scale: 1, opacity: 1, duration: .45, ease: "back.out(1.8)" });
+  $("#rsvpName").focus({ preventScroll: true });
+}
+function closeRsvp() { if (!rsvp.hidden) { rsvp.hidden = true; $("#cta").focus({ preventScroll: true }); } }
+$("#rsvpCancel").addEventListener("click", closeRsvp);
+rsvp.addEventListener("click", (e) => { if (e.target === rsvp) closeRsvp(); });
+function rsvpError(text) { rsvpErr.textContent = text; rsvpErr.hidden = false; }
+
+rsvpForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const name = $("#rsvpName").value.replace(/\s+/g, " ").trim();
+  if (!name) { rsvpError("Впиши, пожалуйста, своё имя."); $("#rsvpName").focus(); return; }
+  rsvpErr.hidden = true;
+  rsvpSend.disabled = true; rsvpSend.textContent = "Отправляем…";
+  let res = null;
+  try {
+    const r = await fetch("rsvp.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, website: rsvpForm.elements.website.value }),
+    });
+    res = await r.json().catch(() => null);
+  } catch (err) { res = null; }
+  rsvpSend.disabled = false; rsvpSend.textContent = "Я приду!";
+  if (!res || !res.ok) {
+    rsvpError(res && res.error === "rate"
+      ? "Слишком много попыток. Попробуй через пару минут."
+      : "Не получилось отправить. Напиши Марине лично — она тебя очень ждёт!");
+    return;
+  }
+  guestName = name;
+  try { localStorage.setItem("rsvpName", name); } catch (err) {}
+  rsvp.hidden = true;
+  markJoined();
   confetti();
   Sound.play("fanfare");
-  if (!joined) {
-    joined = true;
-    $("#cta").classList.add("is-joined");
-    $("#ctaLabel").innerHTML = "Ты в событии!<br>Добавить в календарь";
-    setTimeout(openModal, reduceMotion ? 0 : 900);
-    setTimeout(ageUp, reduceMotion ? 0 : 2600);
-  } else openModal();
+  setTimeout(openModal, reduceMotion ? 0 : 900);
+  setTimeout(ageUp, reduceMotion ? 0 : 2600);
 });
 
 /* ---------- Файл календаря (.ics) ---------- */

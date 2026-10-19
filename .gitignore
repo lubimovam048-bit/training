@@ -1,3 +1,5 @@
 # Пароль для выгрузки по SFTP (deploy.sh)
 .deploy-password
 .DS_Store
+# Токен бота для ответов гостей (sims-bday/rsvp.php)
+sims-bday/rsvp-config.php

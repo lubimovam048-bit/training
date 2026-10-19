@@ -1,0 +1,4 @@
+# Настройки бота для rsvp.php не отдаём по HTTP
+<FilesMatch "^rsvp-config(\.example)?\.php$">
+  Require all denied
+</FilesMatch>

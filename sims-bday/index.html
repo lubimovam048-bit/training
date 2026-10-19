@@ -233,6 +233,18 @@
   </div>
 </div>
 
+<!-- Окно после ответа «Не смогу» -->
+<div class="modal" id="sadModal" hidden>
+  <div class="modal__box glass" role="dialog" aria-modal="true" aria-labelledby="sadTitle">
+    <img src="assets/marina-sad.webp" alt="Марина грустит с красным пламбобом и злым шариком" class="modal__art" width="540" height="647" loading="lazy">
+    <h3 class="modal__title" id="sadTitle">Очень жаль!</h3>
+    <p class="modal__text" id="sadText"></p>
+    <div class="modal__actions">
+      <button class="btn btn--ghost" id="sadClose" type="button">Понятно</button>
+    </div>
+  </div>
+</div>
+
 <!-- Ответ гостя: имя → Марине в Telegram (rsvp.php) -->
 <div class="modal" id="rsvp" hidden>
   <form class="modal__box rsvp glass" style="position: relative" id="rsvpForm" role="dialog" aria-modal="true" aria-labelledby="rsvpTitle" novalidate>
@@ -264,7 +276,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="main.js?v=d26"></script>
+<script src="main.js?v=d29"></script>
 <script src="details.js?v=d16"></script>
 </body>
 </html>

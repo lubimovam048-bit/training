@@ -170,7 +170,7 @@ function closePop() { pop.hidden = true; popOwner = null; }
 document.addEventListener("click", (e) => { if (!pop.hidden && !pop.contains(e.target)) closePop(); });
 addEventListener("scroll", () => { if (!pop.hidden) closePop(); }, { passive: true });
 groupsEl.addEventListener("scroll", () => { if (!pop.hidden) closePop(); }, { passive: true });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closePop(); closeModal(); closeSheet(); closeRsvp(); } });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closePop(); closeModal(); closeSheet(); closeRsvp(); closeSad(); } });
 
 /* ---------- Уведомления ---------- */
 const toast = $("#toast");
@@ -298,6 +298,16 @@ function openRsvp() {
 function closeRsvp() { if (!rsvp.hidden) { rsvp.hidden = true; $("#cta").focus({ preventScroll: true }); } }
 $("#rsvpClose").addEventListener("click", closeRsvp);
 rsvp.addEventListener("click", (e) => { if (e.target === rsvp) closeRsvp(); });
+const sadModal = $("#sadModal");
+function openSad(name) {
+  $("#sadText").textContent = `${name}, Марина получила твой ответ и уже грустит. Если планы изменятся — нажми «Присоединиться» ещё раз.`;
+  sadModal.hidden = false;
+  if (hasGSAP && !reduceMotion) gsap.fromTo("#sadModal .modal__box", { scale: .85, opacity: 0 }, { scale: 1, opacity: 1, duration: .45, ease: "back.out(1.8)" });
+  $("#sadClose").focus({ preventScroll: true });
+}
+function closeSad() { if (!sadModal.hidden) { sadModal.hidden = true; $("#cta").focus({ preventScroll: true }); } }
+$("#sadClose").addEventListener("click", closeSad);
+sadModal.addEventListener("click", (e) => { if (e.target === sadModal) closeSad(); });
 function rsvpError(text) { rsvpErr.textContent = text; rsvpErr.hidden = false; }
 
 rsvpForm.addEventListener("submit", async (e) => {
@@ -327,10 +337,7 @@ rsvpForm.addEventListener("submit", async (e) => {
     return;
   }
   rsvp.hidden = true;
-  if (answer === "no") {
-    showToast("assets/sim-young.webp", "Очень жаль!", "Марина получила твой ответ. Если планы изменятся — нажми «Присоединиться» ещё раз.", 6000);
-    return;
-  }
+  if (answer === "no") { openSad(name); return; }
   guestName = name;
   try { localStorage.setItem("rsvpName", name); } catch (err) {}
   markJoined();

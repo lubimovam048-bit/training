@@ -1,6 +1,7 @@
 <?php
 // Ответ гостя «Присоединиться к событию» → сообщение Марине в Telegram.
 // Токен бота и chat_id лежат в rsvp-config.php рядом (файл не в git, см. rsvp-config.example.php).
+// Совместим с PHP 5.6 (на хостинге сейчас 5.6) и новее.
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
@@ -12,7 +13,7 @@ function respond($code, $data) {
     exit;
 }
 
-if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') respond(405, ['ok' => false, 'error' => 'method']);
+if ((isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : '') !== 'POST') respond(405, ['ok' => false, 'error' => 'method']);
 
 $cfgFile = __DIR__ . '/rsvp-config.php';
 if (!is_file($cfgFile)) respond(500, ['ok' => false, 'error' => 'config']);
@@ -25,11 +26,11 @@ if (!is_array($in)) $in = $_POST;
 // Ловушка для ботов: настоящий гость это поле не видит и не заполняет
 if (!empty($in['website'])) respond(200, ['ok' => true]);
 
-$name = trim(preg_replace('/\s+/u', ' ', (string)($in['name'] ?? '')));
+$name = trim(preg_replace('/\s+/u', ' ', (string)(isset($in['name']) ? $in['name'] : '')));
 if ($name === '' || mb_strlen($name) > 60) respond(400, ['ok' => false, 'error' => 'name']);
 
 // Не больше 5 отправок за 10 минут с одного адреса
-$ip = $_SERVER['REMOTE_ADDR'] ?? '';
+$ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
 $hitsFile = sys_get_temp_dir() . '/sims_rsvp_' . md5($ip);
 $now = time();
 $hits = [];
@@ -42,7 +43,7 @@ if (count($hits) >= 5) respond(429, ['ok' => false, 'error' => 'rate']);
 $hits[] = $now;
 @file_put_contents($hitsFile, implode(',', $hits));
 
-$answer = ($in['answer'] ?? 'yes') === 'no' ? 'no' : 'yes';
+$answer = (isset($in['answer']) && $in['answer'] === 'no') ? 'no' : 'yes';
 $text = ($answer === 'yes' ? "🎉 Придёт на вечеринку!" : "😔 Не сможет прийти")
       . "\n👤 " . $name . "\n🕒 " . date('d.m.Y H:i');
 

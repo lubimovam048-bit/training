@@ -280,59 +280,6 @@ $("#icsBtn").addEventListener("click", () => {
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 });
 
-/* ---------- Облачка мыслей: те же мысли и та же смена, что в карточке Марины ---------- */
-const HOST_NAME = "Марина Л.";
-const cloudEls = [...document.querySelectorAll(".thought")];
-const tipEls = [$("#tipL"), $("#tipR")];
-let cloudStep = 0;
-function hostThoughts() {
-  const t = window.DETAILS_DATA && DETAILS_DATA.thoughts && DETAILS_DATA.thoughts[HOST_NAME];
-  return t && t.length ? t : [{ src: "assets/details/wish-cake.webp", t: "Когда торт?" }, { src: "assets/details/wish-party.webp", t: "Где вечеринка?" }];
-}
-function placeTip(k) {
-  const sim = $("#sim").getBoundingClientRect(), c = cloudEls[k].getBoundingClientRect(), w = tipEls[k].offsetWidth;
-  // по центру под облачком, но не за краем экрана
-  const minX = Math.max(0, -sim.left) + 8 + w / 2, maxX = Math.min(sim.width, innerWidth - sim.left) - 8 - w / 2;
-  tipEls[k].style.left = `${Math.min(Math.max(c.left + c.width / 2 - sim.left, minX), maxX)}px`;
-  tipEls[k].style.top = `${c.bottom - sim.top + 2}px`;
-}
-function setCloud(k, th) {
-  const ic = cloudEls[k].querySelector(".thought__icon");
-  ic.classList.toggle("por", !!th.por); ic.src = th.src;
-  tipEls[k].textContent = th.t; placeTip(k);
-}
-function initClouds() {
-  const list = hostThoughts();
-  list.forEach((th) => { const i = new Image(); i.src = th.src; });
-  cloudEls.forEach((_, k) => setCloud(k, list[k % list.length]));
-  addEventListener("resize", () => cloudEls.forEach((_, k) => placeTip(k)));
-  // Облачка лежат под картинкой сима, поэтому наведение и нажатие ловим по их границам
-  const hit = (e, el) => { const r = el.getBoundingClientRect(); return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom; };
-  let tipTimer;
-  $("#sim").addEventListener("pointermove", (e) => {
-    if (e.pointerType !== "mouse") return;
-    cloudEls.forEach((el, k) => tipEls[k].classList.toggle("is-on", hit(e, el)));
-  });
-  $("#sim").addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") tipEls.forEach((t) => t.classList.remove("is-on")); });
-  // На телефоне — подпись по нажатию на облачко, сама прячется
-  $("#sim").addEventListener("pointerdown", (e) => {
-    if (e.pointerType === "mouse") return;
-    const k = cloudEls.findIndex((el) => hit(e, el));
-    tipEls.forEach((t, i) => t.classList.toggle("is-on", i === k));
-    clearTimeout(tipTimer); if (k >= 0) tipTimer = setTimeout(() => tipEls[k].classList.remove("is-on"), 3000);
-  });
-}
-function cycleClouds() {
-  const list = hostThoughts();
-  if (list.length <= 2) return;
-  cloudStep++;
-  cloudEls.forEach((_, k) => {
-    const th = list[(cloudStep * 2 + k) % list.length], ic = cloudEls[k].querySelector(".thought__icon");
-    if (reduceMotion) { setCloud(k, th); return; }
-    setTimeout(() => { ic.classList.add("swap"); setTimeout(() => { setCloud(k, th); ic.classList.remove("swap"); }, 260); }, k * 700);
-  });
-}
-
 /* ---------- Параллакс фона ---------- */
 function initParallax() {
   const layers = [...document.querySelectorAll(".bg__layer")].map((el) => ({
@@ -473,7 +420,6 @@ const maxTime = new Promise((res) => setTimeout(res, 4000));
 Promise.race([Promise.all([imgReady, minTime]), maxTime]).then(start);
 
 function start() {
-  initClouds();
   clearInterval(phraseTimer);
   document.body.classList.remove("is-loading");
 
@@ -482,7 +428,6 @@ function start() {
   if (reduceMotion) {
     gsap.to(loader, { opacity: 0, duration: .3, onComplete: () => loader.remove() });
     gsap.from([".logo", ".sim", ".panel-l", ".event"], { opacity: 0, duration: .5, stagger: .08, clearProps: "opacity" });
-    setInterval(cycleClouds, 4200);
     return;
   }
 
@@ -498,12 +443,9 @@ function start() {
     .from(".badge", { scale: 0, opacity: 0, duration: .45, stagger: .06, ease: "back.out(2.5)" }, "-=.35")
     .from(".goal", { x: 24, opacity: 0, duration: .4, stagger: .07, clearProps: "transform" }, "<")
     .from(".cta-wrap", { y: mobile ? 90 : 20, opacity: 0, duration: .5, ease: "back.out(1.6)" }, "<.1")
-    .from(".thought__cloud", { scale: .5, opacity: 0, duration: .5, ease: "back.out(1.8)", stagger: .15 }, "-=.5")
     .add(ambient, "-=.4");
 }
 
 function ambient() {
-  // Облачка стоят на месте, меняются только иконки
-  setInterval(cycleClouds, 4200);
   initParallax();
 }

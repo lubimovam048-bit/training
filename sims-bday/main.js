@@ -227,7 +227,7 @@ function ageUp() {
       .to(s, { y: -r * 3, x: Math.cos(a) * r, opacity: 0, duration: 1.1, ease: "power1.out" }, ">-0.1");
   }
   gsap.timeline({ onComplete: () => { ageing = false; } })
-    .to("#simImg", { filter: "drop-shadow(0 0 30px rgba(190,255,150,.95)) brightness(1.15)", duration: .5, yoyo: true, repeat: 1 })
+    .to(document.querySelector(".sim__img.is-on") || "#simImg", { filter: "drop-shadow(0 0 30px rgba(190,255,150,.95)) brightness(1.15)", duration: .5, yoyo: true, repeat: 1 })
     .to(label, { opacity: 0, duration: .12, repeat: 7, yoyo: true, ease: "none" }, 0)
     .call(() => { label.textContent = "Взрослая?"; }, null, .9)
     .to(label, { opacity: 0, duration: .1, repeat: 5, yoyo: true, ease: "none" }, 1.0)
@@ -235,7 +235,23 @@ function ageUp() {
     .fromTo(label, { scale: 1.08, color: "#2fae47" }, { scale: 1, color: "#1546b4", duration: .45, ease: "power2.out" }, 1.65)
     .call(() => showToast("assets/sim-young.webp", "Марина стала… Молодой!", "Опять. Возраст не меняется, проверено."), null, 1.7);
 }
-$("#simImg").addEventListener("click", ageUp);
+document.querySelectorAll(".sim__img").forEach((img) => img.addEventListener("click", ageUp));
+
+/* ---------- Позы на главной: сменяются по кругу ---------- */
+const POSE_MS = 7000;
+function startPoses() {
+  const poses = [...document.querySelectorAll(".sim__img")];
+  if (poses.length < 2 || reduceMotion) return;
+  let cur = 0;
+  setInterval(() => {
+    if (document.hidden) return;
+    const next = (cur + 1) % poses.length;
+    if (!poses[next].complete || !poses[next].naturalWidth) return; // ждём, пока картинка загрузится
+    poses[next].classList.add("is-on");
+    poses[cur].classList.remove("is-on");
+    cur = next;
+  }, POSE_MS);
+}
 
 /* ---------- Конфетти из кристаллов ---------- */
 function confetti() {
@@ -472,4 +488,5 @@ function start() {
 
 function ambient() {
   initParallax();
+  startPoses();
 }

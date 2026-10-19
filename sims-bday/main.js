@@ -347,24 +347,23 @@ rsvpForm.addEventListener("submit", async (e) => {
   setTimeout(ageUp, reduceMotion ? 0 : 2600);
 });
 
-/* ---------- Файл календаря (.ics) ---------- */
+/* ---------- Добавить в календарь ----------
+   iPhone/Mac/компьютер — готовый файл marina-birthday.ics с сервера (при смене даты/места обновить и его),
+   Android — Google Календарь с заполненным событием. */
 $("#icsBtn").addEventListener("click", () => {
-  const fmt = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-  const esc = (s) => String(s).replace(/([,;\\])/g, "\\$1");
-  const ics = [
-    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//sims-bday//RU", "CALSCALE:GREGORIAN", "BEGIN:VEVENT",
-    `UID:sims-bday-${startDate.getTime()}@marina`, `DTSTAMP:${fmt(new Date())}`,
-    `DTSTART:${fmt(startDate)}`, `DTEND:${fmt(endDate)}`,
-    "SUMMARY:День рождения Марины — вечеринка в стиле The Sims",
-    `LOCATION:${esc(PARTY.place)}`,
-    `DESCRIPTION:${esc("Основная цель: задуть свечи.")}${PARTY.mapUrl ? "\\n" + esc(PARTY.mapUrl) : ""}`,
-    "BEGIN:VALARM", "TRIGGER:-P1D", "ACTION:DISPLAY", "DESCRIPTION:Завтра вечеринка!", "END:VALARM",
-    "END:VEVENT", "END:VCALENDAR",
-  ].join("\r\n");
-  const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
-  const a = Object.assign(document.createElement("a"), { href: url, download: "marina-birthday.ics" });
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  if (/Android/i.test(navigator.userAgent)) {
+    const fmt = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+    const q = new URLSearchParams({
+      action: "TEMPLATE",
+      text: "День рождения Марины — вечеринка в стиле The Sims",
+      dates: `${fmt(startDate)}/${fmt(endDate)}`,
+      location: PARTY.place,
+      details: `Основная цель: задуть свечи. Детали и маршрут: https://sims-party.ru/${PARTY.mapUrl ? "\nКарта: " + PARTY.mapUrl : ""}`,
+    });
+    window.open(`https://calendar.google.com/calendar/render?${q}`, "_blank", "noopener");
+    return;
+  }
+  location.href = "marina-birthday.ics";
 });
 
 /* ---------- Параллакс фона ---------- */

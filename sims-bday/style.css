@@ -268,6 +268,8 @@ button { font: inherit; color: inherit; }
 .msheet__item p { margin: 2px 0 0; font-size: 14px; line-height: 1.35; font-weight: 600; }
 .modal__box { width: min(400px, 100%); padding: 26px 22px 20px; text-align: center; background: linear-gradient(160deg, rgba(255, 255, 255, .97), rgba(236, 244, 253, .95)); }
 .modal__gem { width: 40px; margin: 0 auto 8px; }
+.modal__art { display: block; width: min(220px, 62%); height: auto; margin: -6px auto 14px; border-radius: 18px; box-shadow: 0 0 0 3px #fff, 0 8px 20px rgba(22, 60, 120, .25); }
+@media (max-height: 700px) { .modal__art { width: min(170px, 50%); } }
 .modal__title { margin: 0 0 8px; color: var(--blue); font-size: 24px; font-weight: 900; }
 .modal__text { margin: 0 0 18px; font-weight: 600; line-height: 1.45; }
 .modal__actions { display: grid; gap: 10px; }

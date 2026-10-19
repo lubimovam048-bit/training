@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=d16">
+<link rel="stylesheet" href="style.css?v=d17">
 <link rel="stylesheet" href="details.css?v=d11">
 </head>
 <body class="is-loading">
@@ -229,11 +229,20 @@
   </div>
 </div>
 
+<!-- Все рубежи группы -->
+<div class="modal msheet" id="msheet" hidden>
+  <div class="modal__box msheet__box glass" role="dialog" aria-modal="true" aria-labelledby="msheetTitle">
+    <button class="msheet__close" id="msheetClose" type="button" aria-label="Закрыть"><img src="assets/details/close.webp" alt=""></button>
+    <h3 class="modal__title msheet__title" id="msheetTitle"></h3>
+    <ul class="msheet__list" id="msheetList"></ul>
+  </div>
+</div>
+
 <div class="confetti" id="confetti" aria-hidden="true"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="main.js?v=d15"></script>
+<script src="main.js?v=d17"></script>
 <script src="details.js?v=d16"></script>
 </body>
 </html>

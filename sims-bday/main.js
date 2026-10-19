@@ -19,6 +19,10 @@ const MILESTONES = [
   {
     group: "Первые разы",
     items: [
+      { img: "m-dream-job", title: "Работа мечты", text: "Карьера на максимуме. Кофе всё ещё обязателен." },
+      { img: "m-car", title: "Права и колёса", text: "Купила машину. Теперь «я буду через 10 минут» — почти правда." },
+      { img: "m-diploma", title: "Диплом в кармане", text: "Навык «Логика» прокачан, нервная система — не очень. Рубеж открыт с отличием по выживанию." },
+      { img: "m-school", title: "Выпускница школы", text: "Аттестат получен, мудлет «Свобода!» на 3 дня. Потом оказалось, что дальше университет." },
       { img: "m-heart", title: "Первая любовь", text: "Рубеж получен. Подробности выдаются только лично и только после второго куска торта." },
       { img: "m-career", title: "Первая работа", text: "Персонаж устроился на работу и с тех пор ни разу не забывал про кофе." },
     ],
@@ -26,7 +30,11 @@ const MILESTONES = [
   {
     group: "Жизнь",
     items: [
-      { img: "m-pets", title: "Завела питомца", text: "Шкала «Веселье» с тех пор не опускается ниже зелёного." },
+      { img: "m-degu", title: "Хранительница дегу", text: "Завела белок дегу. Да, это реально такие зверьки. Нет, они не белки. Да, они главные." },
+      { img: "m-cat", title: "Кошачья мама", text: "Завела кошку. Теперь в доме главная не я." },
+      { img: "m-dog", title: "Собачья мама", text: "Завела собаку. Шкала «Веселье» всегда зелёная, шкала «Сон» под вопросом." },
+      { img: "m-renovation", title: "Своими руками", text: "Сделала ремонт сама. Навык «Мастер на все руки» — 10. Перфоратор соседей — тоже 10." },
+      { img: "m-sanatorium", title: "Санаторий особого режима", text: "Мудлет «Напряжена» сменился на «Спокойна». Рекомендую, но лучше не попадать." },
       { img: "m-fame", title: "Звезда вечеринок", text: "Навык «Харизма» прокачан. Проверим 30-го уровня на практике." },
     ],
   },
@@ -39,6 +47,8 @@ const MILESTONES = [
     ],
   },
 ];
+/* Сколько значков группы видно в панели; остальные — по кнопке «…» */
+const MILESTONES_VISIBLE = 3;
 
 const LOADER_PHRASES = [
   "Надуваем шарики…", "Ретикулируем сплайны…", "Прячем возраст…",
@@ -101,12 +111,12 @@ $("#soundBtn").addEventListener("click", () => Sound.toggle());
 
 /* ---------- Рубежи ---------- */
 const groupsEl = $("#groups");
-MILESTONES.forEach((g, gi) => {
+MILESTONES.forEach((g) => {
   const group = document.createElement("div");
   group.className = "group";
   group.innerHTML = `<div class="group__head">${g.group}</div><div class="group__body"></div>`;
   const body = group.querySelector(".group__body");
-  g.items.forEach((m) => {
+  g.items.slice(0, MILESTONES_VISIBLE).forEach((m) => {
     const b = document.createElement("button");
     b.type = "button";
     b.className = "badge";
@@ -119,13 +129,27 @@ MILESTONES.forEach((g, gi) => {
   });
   const more = document.createElement("button");
   more.type = "button"; more.className = "more"; more.setAttribute("aria-label", `Ещё рубежи: ${g.group}`);
-  more.addEventListener("click", (e) => {
-    e.stopPropagation();
-    openPop(more, { img: "assets/plumbob.webp", kicker: g.group, title: "Ещё не открыто", text: gi === 2 ? "Следующий рубеж — «Отметили 30 вместе». Откроется на вечеринке." : "Новые рубежи разблокируются после 30. Следите за обновлениями!" });
-  });
+  more.addEventListener("click", (e) => { e.stopPropagation(); closePop(); openSheet(g); });
   body.appendChild(more);
   groupsEl.appendChild(group);
 });
+
+/* ---------- Все рубежи группы (кнопка «…») ---------- */
+const sheet = $("#msheet");
+function openSheet(g) {
+  $("#msheetTitle").textContent = `Рубежи — ${g.group}`;
+  $("#msheetList").innerHTML = g.items.map((m) => `
+    <li class="msheet__item"><img src="assets/${m.img}.webp" alt="" width="184" height="184" loading="lazy">
+      <div><b>${m.title}</b><p>${m.text}</p></div></li>`).join("");
+  sheet.hidden = false;
+  $("#msheetList").scrollTop = 0;
+  if (hasGSAP && !reduceMotion) gsap.fromTo(".msheet__box", { scale: .9, opacity: 0 }, { scale: 1, opacity: 1, duration: .35, ease: "back.out(1.8)" });
+  Sound.play("pop");
+  $("#msheetClose").focus({ preventScroll: true });
+}
+function closeSheet() { sheet.hidden = true; }
+$("#msheetClose").addEventListener("click", closeSheet);
+sheet.addEventListener("click", (e) => { if (e.target === sheet) closeSheet(); });
 
 /* ---------- Поповер ---------- */
 const pop = $("#pop");
@@ -146,7 +170,7 @@ function closePop() { pop.hidden = true; popOwner = null; }
 document.addEventListener("click", (e) => { if (!pop.hidden && !pop.contains(e.target)) closePop(); });
 addEventListener("scroll", () => { if (!pop.hidden) closePop(); }, { passive: true });
 groupsEl.addEventListener("scroll", () => { if (!pop.hidden) closePop(); }, { passive: true });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closePop(); closeModal(); } });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closePop(); closeModal(); closeSheet(); } });
 
 /* ---------- Уведомления ---------- */
 const toast = $("#toast");

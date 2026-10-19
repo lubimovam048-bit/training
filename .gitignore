@@ -1,0 +1,3 @@
+# Пароль для выгрузки по SFTP (deploy.sh)
+.deploy-password
+.DS_Store

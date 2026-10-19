@@ -235,17 +235,18 @@
 
 <!-- Ответ гостя: имя → Марине в Telegram (rsvp.php) -->
 <div class="modal" id="rsvp" hidden>
-  <form class="modal__box rsvp glass" id="rsvpForm" role="dialog" aria-modal="true" aria-labelledby="rsvpTitle" novalidate>
+  <form class="modal__box rsvp glass" style="position: relative" id="rsvpForm" role="dialog" aria-modal="true" aria-labelledby="rsvpTitle" novalidate>
     <img src="assets/plumbob.webp" alt="" class="modal__gem">
     <h3 class="modal__title" id="rsvpTitle">Присоединиться к событию</h3>
-    <p class="modal__text">Как тебя зовут? Марина получит уведомление, что ты придёшь.</p>
+    <button class="msheet__close" id="rsvpClose" type="button" aria-label="Закрыть"><img src="assets/details/close.webp" alt=""></button>
+    <p class="modal__text">Впиши своё имя и ответь, получится ли прийти. Марина сразу получит твой ответ.</p>
     <label class="sr" for="rsvpName">Твоё имя</label>
     <input class="rsvp__input" id="rsvpName" name="name" type="text" maxlength="60" autocomplete="name" placeholder="Имя и фамилия" required>
     <input class="rsvp__hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
     <p class="rsvp__err" id="rsvpErr" role="alert" hidden></p>
     <div class="modal__actions">
-      <button class="btn btn--green" id="rsvpSend" type="submit">Я приду!</button>
-      <button class="btn btn--ghost" id="rsvpCancel" type="button">Пока не знаю</button>
+      <button class="btn btn--green" id="rsvpYes" type="submit" value="yes">Я приду!</button>
+      <button class="btn btn--ghost" id="rsvpNo" type="submit" value="no">Не смогу</button>
     </div>
   </form>
 </div>
@@ -263,7 +264,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="main.js?v=d25"></script>
+<script src="main.js?v=d26"></script>
 <script src="details.js?v=d16"></script>
 </body>
 </html>

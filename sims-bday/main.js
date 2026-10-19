@@ -287,7 +287,8 @@ $("#cta").addEventListener("click", () => {
 });
 
 /* ---------- Ответ гостя: имя → Марине в Telegram (rsvp.php) ---------- */
-const rsvp = $("#rsvp"), rsvpForm = $("#rsvpForm"), rsvpErr = $("#rsvpErr"), rsvpSend = $("#rsvpSend");
+const rsvp = $("#rsvp"), rsvpForm = $("#rsvpForm"), rsvpErr = $("#rsvpErr");
+const rsvpBtns = [$("#rsvpYes"), $("#rsvpNo")];
 function openRsvp() {
   rsvpErr.hidden = true;
   rsvp.hidden = false;
@@ -295,35 +296,43 @@ function openRsvp() {
   $("#rsvpName").focus({ preventScroll: true });
 }
 function closeRsvp() { if (!rsvp.hidden) { rsvp.hidden = true; $("#cta").focus({ preventScroll: true }); } }
-$("#rsvpCancel").addEventListener("click", closeRsvp);
+$("#rsvpClose").addEventListener("click", closeRsvp);
 rsvp.addEventListener("click", (e) => { if (e.target === rsvp) closeRsvp(); });
 function rsvpError(text) { rsvpErr.textContent = text; rsvpErr.hidden = false; }
 
 rsvpForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+  const answer = e.submitter && e.submitter.value === "no" ? "no" : "yes";
   const name = $("#rsvpName").value.replace(/\s+/g, " ").trim();
   if (!name) { rsvpError("Впиши, пожалуйста, своё имя."); $("#rsvpName").focus(); return; }
   rsvpErr.hidden = true;
-  rsvpSend.disabled = true; rsvpSend.textContent = "Отправляем…";
+  const btn = answer === "yes" ? rsvpBtns[0] : rsvpBtns[1], label = btn.textContent;
+  rsvpBtns.forEach((b) => { b.disabled = true; });
+  btn.textContent = "Отправляем…";
   let res = null;
   try {
     const r = await fetch("rsvp.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, website: rsvpForm.elements.website.value }),
+      body: JSON.stringify({ name, answer, website: rsvpForm.elements.website.value }),
     });
     res = await r.json().catch(() => null);
   } catch (err) { res = null; }
-  rsvpSend.disabled = false; rsvpSend.textContent = "Я приду!";
+  rsvpBtns.forEach((b) => { b.disabled = false; });
+  btn.textContent = label;
   if (!res || !res.ok) {
     rsvpError(res && res.error === "rate"
       ? "Слишком много попыток. Попробуй через пару минут."
       : "Не получилось отправить. Напиши Марине лично — она тебя очень ждёт!");
     return;
   }
+  rsvp.hidden = true;
+  if (answer === "no") {
+    showToast("assets/sim-young.webp", "Очень жаль!", "Марина получила твой ответ. Если планы изменятся — нажми «Присоединиться» ещё раз.", 6000);
+    return;
+  }
   guestName = name;
   try { localStorage.setItem("rsvpName", name); } catch (err) {}
-  rsvp.hidden = true;
   markJoined();
   confetti();
   Sound.play("fanfare");

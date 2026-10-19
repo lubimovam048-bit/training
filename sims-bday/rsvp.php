@@ -42,7 +42,9 @@ if (count($hits) >= 5) respond(429, ['ok' => false, 'error' => 'rate']);
 $hits[] = $now;
 @file_put_contents($hitsFile, implode(',', $hits));
 
-$text = "🎉 Новый гость на вечеринке!\n👤 " . $name . "\n🕒 " . date('d.m.Y H:i');
+$answer = ($in['answer'] ?? 'yes') === 'no' ? 'no' : 'yes';
+$text = ($answer === 'yes' ? "🎉 Придёт на вечеринку!" : "😔 Не сможет прийти")
+      . "\n👤 " . $name . "\n🕒 " . date('d.m.Y H:i');
 
 $ch = curl_init('https://api.telegram.org/bot' . $cfg['token'] . '/sendMessage');
 curl_setopt_array($ch, [

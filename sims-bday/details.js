@@ -8,7 +8,6 @@ const GUESTS = D.guests, LINKS = D.links, TRAITS = D.traits, ORDER = D.order;
 const PROD = {"так себе":3,"хорошая":4,"отличная":5};
 const relType = l => l.romance==="женаты" ? "married" : l.romance==="любовь" ? "love" : l.friendship>=70 ? "friends" : l.friendship>=30 ? "buddies" : "acq";
 const REL_ICON = {love:IMG["rel-love"], married:IMG["rel-married"], friends:IMG["rel-friends"], buddies:IMG["rel-buddies"], acq:IMG["rel-acquaintance"]};
-const WISH = [IMG["wish-cake"], IMG["wish-party"]];
 const HOST = ORDER.find(n=>GUESTS[n].relation==="Именинница");
 
 const $ = id => document.getElementById(id);

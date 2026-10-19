@@ -129,25 +129,25 @@ button { font: inherit; color: inherit; }
 .thought { position: absolute; z-index: 0; width: 21%; pointer-events: none; }
 .thought--l { left: 12%; top: -1.5%; }
 .thought--r { left: 66%; top: 2.5%; width: 23%; }
-.thought__cloud {
-  position: relative; aspect-ratio: 520 / 389;
-  display: grid; place-items: center;
+/* Облачко как в карточке сима (details.css .bubble): облако 203×156, иконка 82×74 */
+.thought__cloud { position: relative; aspect-ratio: 203 / 156; }
+.thought__cl { position: absolute; inset: 0; width: 100%; height: 100%; }
+.thought--r .thought__cl { transform: scaleX(-1); }
+.thought__icon { position: absolute; left: 27.3%; top: 17.4%; width: 40.4%; height: 47.4%; object-fit: contain; transition: opacity .26s, scale .26s; }
+.thought--r .thought__icon { left: 32.3%; }
+.thought__icon:not([src]) { visibility: hidden; }
+.thought__icon.swap { opacity: 0; scale: .6; }
+.thought__icon.por { width: auto; height: 45%; aspect-ratio: 1; left: 50%; top: 18%; translate: -50% 0; border-radius: 50%; object-fit: cover; object-position: top; background: #dbe8f0; box-shadow: 0 0 0 3px #fff, 0 2px 6px rgba(0, 40, 100, .25); }
+.thought--r .thought__icon.por { left: 50%; }
+/* Подпись мысли — поверх сима, показывается при наведении (на тач-экранах всегда) */
+.thought__tip {
+  position: absolute; z-index: 4; translate: -50% 0; pointer-events: none;
+  max-width: 220px; width: max-content; text-align: center; line-height: 1.3;
+  font: 600 13px var(--font); color: #fff; background: rgba(0, 74, 177, .85); padding: 5px 12px; border-radius: 999px;
+  opacity: 0; transition: opacity .2s;
 }
-.thought__cloud::before { content: ""; position: absolute; inset: 0; background: url("assets/cloud.webp") center / contain no-repeat; }
-.thought--r .thought__cloud::before { transform: scaleX(-1); }
-.thought__icon { position: relative; }
-.thought__icon { width: 42%; height: auto; filter: drop-shadow(0 3px 4px rgba(40, 60, 120, .2)); }
-.thought__dot {
-  position: absolute; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff, #dfe8f7 55%, #b9c8ea);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .9), 0 2px 6px rgba(40, 70, 140, .2);
-}
-.thought--l .d1 { width: 9%;  aspect-ratio: 1; right: 4%;  top: 78%; }
-.thought--l .d2 { width: 6%;  aspect-ratio: 1; right: -4%; top: 92%; }
-.thought--l .d3 { width: 4%;  aspect-ratio: 1; right: -10%; top: 102%; }
-.thought--r .d1 { width: 8%;  aspect-ratio: 1; left: 8%;  top: 80%; }
-.thought--r .d2 { width: 5.5%; aspect-ratio: 1; left: 1%; top: 94%; }
-.thought--r .d3 { width: 3.5%; aspect-ratio: 1; left: -4%; top: 104%; }
+.thought__tip.is-on { opacity: 1; }
+@media (max-width: 900px) { .thought__tip { font-size: 11px; max-width: 150px; padding: 4px 10px; } }
 
 /* ---------- Left panel ---------- */
 .panel-l { grid-column: 1; position: relative; z-index: 3; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; min-width: 0; }

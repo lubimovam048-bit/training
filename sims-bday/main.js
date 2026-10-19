@@ -4,7 +4,7 @@
 const PARTY = {
   // Дата и время начала (часовой пояс +03:00 — Москва)
   start: "2026-11-28T17:00:00+03:00",
-  // Сколько часов длится (для файла календаря)
+  // Сколько часов длится (после этого отсчёт пишет «Вечеринка прошла»)
   durationHours: 5,
   // С какого момента «монетка» начинает ползти по прогресс-бару
   inviteSent: "2026-10-05T00:00:00+03:00",
@@ -267,7 +267,7 @@ function openModal() {
   $("#modalText").textContent = `${guestName ? guestName + ", ж" : "Ж"}ду тебя ${f.format(startDate)}. ${PARTY.place}.`;
   modal.hidden = false;
   if (hasGSAP && !reduceMotion) gsap.fromTo("#modal .modal__box", { scale: .85, opacity: 0 }, { scale: 1, opacity: 1, duration: .45, ease: "back.out(1.8)" });
-  $("#icsBtn").focus({ preventScroll: true });
+  $("#modalClose").focus({ preventScroll: true });
 }
 function closeModal() { if (!modal.hidden) { modal.hidden = true; $("#cta").focus({ preventScroll: true }); } }
 $("#modalClose").addEventListener("click", closeModal);
@@ -276,7 +276,7 @@ modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); }
 function markJoined() {
   joined = true;
   $("#cta").classList.add("is-joined");
-  $("#ctaLabel").innerHTML = "Ты в событии!<br>Добавить в календарь";
+  $("#ctaLabel").textContent = "Ты в событии!";
 }
 // Гость уже отвечал с этого устройства — кнопка сразу «в событии»
 try { guestName = localStorage.getItem("rsvpName") || ""; if (guestName) markJoined(); } catch (e) {}
@@ -345,25 +345,6 @@ rsvpForm.addEventListener("submit", async (e) => {
   Sound.play("fanfare");
   setTimeout(openModal, reduceMotion ? 0 : 900);
   setTimeout(ageUp, reduceMotion ? 0 : 2600);
-});
-
-/* ---------- Добавить в календарь ----------
-   iPhone/Mac/компьютер — готовый файл marina-birthday.ics с сервера (при смене даты/места обновить и его),
-   Android — Google Календарь с заполненным событием. */
-$("#icsBtn").addEventListener("click", () => {
-  if (/Android/i.test(navigator.userAgent)) {
-    const fmt = (d) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-    const q = new URLSearchParams({
-      action: "TEMPLATE",
-      text: "День рождения Марины — вечеринка в стиле The Sims",
-      dates: `${fmt(startDate)}/${fmt(endDate)}`,
-      location: PARTY.place,
-      details: `Основная цель: задуть свечи. Детали и маршрут: https://sims-party.ru/${PARTY.mapUrl ? "\nКарта: " + PARTY.mapUrl : ""}`,
-    });
-    window.open(`https://calendar.google.com/calendar/render?${q}`, "_blank", "noopener");
-    return;
-  }
-  location.href = "marina-birthday.ics";
 });
 
 /* ---------- Параллакс фона ---------- */

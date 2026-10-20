@@ -214,6 +214,9 @@ body.open .gpage{pointer-events:auto}
 .gcard .info{background:#edf2fc;min-height:51px;padding:8px;display:flex;flex-direction:column;justify-content:center;gap:4px}
 .gcard .nm{font:500 14px/1.2 var(--ui);color:#0083ee}
 .gcard .rl{font:400 12px/1.2 var(--ui);color:#00c000}
+/* Гость точно придёт (DETAILS_DATA.confirmed) — зелёная полоска, как шкала в The Sims */
+.gcard.ok .info{background:linear-gradient(180deg,#8fe25a,#3faa2c)}
+.gcard.ok .nm,.gcard.ok .rl{color:#fff;text-shadow:0 1px 1px rgba(0,70,10,.4)}
 
 /* место */
 .place{display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:center}

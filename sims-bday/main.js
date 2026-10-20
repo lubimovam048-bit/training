@@ -286,7 +286,8 @@ function markJoined() {
 try { guestName = localStorage.getItem("rsvpName") || ""; chatUrl = localStorage.getItem("rsvpChat") || ""; if (guestName) markJoined(); } catch (e) {}
 
 $("#cta").addEventListener("click", () => {
-  if (joined) { confetti(); Sound.play("fanfare"); openModal(); return; }
+  // Ответил раньше, когда ссылки на чат ещё не было, — ответ отправляется заново, чтобы получить ссылку
+  if (joined && chatUrl) { confetti(); Sound.play("fanfare"); openModal(); return; }
   openRsvp();
 });
 
@@ -295,6 +296,7 @@ const rsvp = $("#rsvp"), rsvpForm = $("#rsvpForm"), rsvpErr = $("#rsvpErr");
 const rsvpBtns = [$("#rsvpYes"), $("#rsvpNo")];
 function openRsvp() {
   rsvpErr.hidden = true;
+  if (guestName && !$("#rsvpName").value) $("#rsvpName").value = guestName;
   rsvp.hidden = false;
   if (hasGSAP && !reduceMotion) gsap.fromTo("#rsvp .modal__box", { scale: .85, opacity: 0 }, { scale: 1, opacity: 1, duration: .45, ease: "back.out(1.8)" });
   $("#rsvpName").focus({ preventScroll: true });

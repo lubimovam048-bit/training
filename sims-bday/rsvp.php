@@ -59,4 +59,7 @@ $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
 if ($res === false || $code !== 200) respond(502, ['ok' => false, 'error' => 'telegram']);
-respond(200, ['ok' => true]);
+
+// Ссылку на чат гостей отдаём только тем, кто придёт (в коде страницы её нет)
+$chat = ($answer === 'yes' && !empty($cfg['chat_url'])) ? $cfg['chat_url'] : null;
+respond(200, ['ok' => true, 'chat' => $chat]);

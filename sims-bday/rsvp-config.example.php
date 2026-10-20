@@ -5,4 +5,5 @@
 return [
     'token'   => 'TG_BOT_TOKEN',   // токен бота от @BotFather
     'chat_id' => 'TG_CHAT_ID',     // ваш chat_id (см. README)
+    'chat_url' => '',              // ссылка на чат гостей (необязательно)
 ];

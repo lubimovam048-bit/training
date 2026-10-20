@@ -262,9 +262,13 @@ function confetti() {
 const modal = $("#modal");
 let joined = false;
 let guestName = "";
+let chatUrl = "";
 function openModal() {
   const f = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Moscow" });
   $("#modalText").textContent = `${guestName ? guestName + ", ж" : "Ж"}ду тебя ${f.format(startDate)}. ${PARTY.place}.`;
+  const chat = $("#modalChat");
+  chat.hidden = !chatUrl;
+  if (chatUrl) chat.href = chatUrl;
   modal.hidden = false;
   if (hasGSAP && !reduceMotion) gsap.fromTo("#modal .modal__box", { scale: .85, opacity: 0 }, { scale: 1, opacity: 1, duration: .45, ease: "back.out(1.8)" });
   $("#modalClose").focus({ preventScroll: true });
@@ -279,7 +283,7 @@ function markJoined() {
   $("#ctaLabel").textContent = "Ты в событии!";
 }
 // Гость уже отвечал с этого устройства — кнопка сразу «в событии»
-try { guestName = localStorage.getItem("rsvpName") || ""; if (guestName) markJoined(); } catch (e) {}
+try { guestName = localStorage.getItem("rsvpName") || ""; chatUrl = localStorage.getItem("rsvpChat") || ""; if (guestName) markJoined(); } catch (e) {}
 
 $("#cta").addEventListener("click", () => {
   if (joined) { confetti(); Sound.play("fanfare"); openModal(); return; }
@@ -339,7 +343,8 @@ rsvpForm.addEventListener("submit", async (e) => {
   rsvp.hidden = true;
   if (answer === "no") { openSad(name); return; }
   guestName = name;
-  try { localStorage.setItem("rsvpName", name); } catch (err) {}
+  chatUrl = /^https:\/\/t\.me\//.test(res.chat || "") ? res.chat : "";
+  try { localStorage.setItem("rsvpName", name); if (chatUrl) localStorage.setItem("rsvpChat", chatUrl); } catch (err) {}
   markJoined();
   confetti();
   Sound.play("fanfare");
